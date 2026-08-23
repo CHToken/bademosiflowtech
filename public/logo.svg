@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 72" role="img" aria-label="Bademosi FlowTech Plumbing Solutions">
+  <rect x="4" y="4" width="64" height="64" rx="14" fill="#075985"/>
+  <path d="M56.8 33.9c-1.4 6.4-5.6 11.2-12.2 12.8-3 .8-6 .8-8.6 0-4-1.2-7.2-3.8-9.2-7.4-1.8-3.2-2.2-6.6-1.4-10 1.4-6.4 5.6-11.2 12.2-12.8 6.6-1.6 13 .8 16.6 6.4l-4.6 2.4c-2-3.2-5.6-4.6-9.4-3.8-3.8.8-6.4 4-7.2 7.8-.6 2.4-.2 4.8 1 7 .7 1.2 1.7 2.2 3 2.7 2.2.9 4.6.9 6.6 0 4.4-1 7.2-4 8-8.4l2.2.3z" fill="#FFFFFF"/>
+  <path d="M56 12c1.5 1.9 2.4 3 2.4 4a2.4 2.4 0 1 1-4.8 0c0-1 .9-2.1 2.4-4z" fill="#38BDF8"/>
+  <text x="84" y="34" font-family="Arial, Helvetica, sans-serif" font-size="21" font-weight="700" fill="#0F172A">Bademosi FlowTech</text>
+  <text x="84" y="52" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="600" letter-spacing="2.5" fill="#075985">PLUMBING SOLUTIONS</text>
+</svg>

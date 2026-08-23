@@ -1,0 +1,12 @@
+{
+  "name": "Bademosi FlowTech — Plumbing Solutions",
+  "short_name": "Bademosi FlowTech",
+  "description": "24/7 plumber in Lagos, Nigeria: borehole setup, leak detection, bathroom fitting and drain unblocking.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#075985",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

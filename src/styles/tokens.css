@@ -1,0 +1,39 @@
+:root {
+  /* Sky blue brand palette */
+  --sky-700: #0369A1;
+  --sky-600: #0284C7;
+  --sky-500: #0EA5E9;
+  --sky-400: #38BDF8;
+  --sky-300: #7DD3FC;
+  --sky-100: #E0F2FE;
+  --sky-50: #F0F9FF;
+
+  /* Deep slate neutrals */
+  --ink-900: #0F172A;
+  --ink-800: #1E293B;
+  --ink-700: #334155;
+  --ink-600: #475569;
+  --ink-500: #64748B;
+  --ink-400: #94A3B8;
+  --line: #E2E8F0;
+  --paper: #F8FAFC;
+  --paper-2: #F1F5F9;
+  --white: #FFFFFF;
+
+  /* Action colors */
+  --wa: #128C7E;
+  --wa-dark: #0F766E;
+  --wa-soft: #D1FAE5;
+  --ok: #16A34A;
+  --star: #F59E0B;
+
+  /* Shape & depth */
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 16px;
+  --shadow-card: 0 1px 2px rgb(15 23 42 / 0.05), 0 4px 16px rgb(15 23 42 / 0.06);
+  --shadow-float: 0 8px 24px rgb(15 23 42 / 0.14);
+  --shadow-sky: 0 4px 14px rgb(2 132 199 / 0.35);
+
+  --font: 'Inter', 'Public Sans', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
