@@ -1,5 +1,5 @@
-import { PHONE, PHONE_DISPLAY, WA_LINK } from '../constants'
-import { CheckIcon, PhoneIcon, WhatsAppIcon, ShieldCheckIcon, CalendarIcon } from './Icons'
+import { PHONE, PHONE_DISPLAY, WA_LINK, TIKTOK_URL, INSTAGRAM_URL } from '../constants'
+import { CheckIcon, PhoneIcon, WhatsAppIcon, ShieldCheckIcon, CalendarIcon, TikTokIcon, InstagramIcon } from './Icons'
 import Reveal from './Reveal'
 
 const TRUST_POINTS = [
@@ -22,9 +22,9 @@ export default function Hero() {
 
           <p className="lede">
             <strong>Bademosi FlowTech</strong> is a licensed plumbing contractor serving homes and businesses across
-            Lagos, Abuja and Port Harcourt. We handle emergency repairs, borehole and water system installations,
-            and full plumbing works for buildings, condict and modern developments, with clean workmanship and
-            guaranteed results on every job.
+            Lagos, Abuja, Ogun, Ibadan, Ondo and Asaba–Onitsha. We handle emergency repairs, household plumbing,
+            borehole and water system installations, and full plumbing works for buildings, condict and modern
+            developments, with clean workmanship and guaranteed results on every job.
           </p>
 
           <div className="hero-ctas">
@@ -39,6 +39,16 @@ export default function Hero() {
             <a className="btn btn-ghost" href="#book">
               <CalendarIcon className="icon" />
               Book a service
+            </a>
+          </div>
+
+          <div className="hero-socials">
+            <span>Follow our work:</span>
+            <a href={TIKTOK_URL} target="_blank" rel="noopener noreferrer" aria-label="Bademosi FlowTech on TikTok">
+              <TikTokIcon className="icon-sm" />
+            </a>
+            <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" aria-label="Bademosi FlowTech on Instagram">
+              <InstagramIcon className="icon-sm" />
             </a>
           </div>
 

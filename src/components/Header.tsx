@@ -1,5 +1,5 @@
-import { PHONE, PHONE_DISPLAY } from '../constants'
-import { PhoneIcon } from './Icons'
+import { PHONE, PHONE_DISPLAY, TIKTOK_URL, INSTAGRAM_URL } from '../constants'
+import { PhoneIcon, TikTokIcon, InstagramIcon } from './Icons'
 
 export default function Header() {
   return (
@@ -15,10 +15,18 @@ export default function Header() {
           <a href="#areas">Coverage</a>
           <a href="#book">Get a quote</a>
         </nav>
-        <a className="header-call" href={`tel:${PHONE}`} aria-label={`Call Bademosi FlowTech directly on ${PHONE_DISPLAY}`}>
-          <PhoneIcon className="icon-sm" />
-          <span className="label">{PHONE_DISPLAY}</span>
-        </a>
+        <div className="header-actions">
+          <a className="header-social" href={TIKTOK_URL} target="_blank" rel="noopener noreferrer" aria-label="Bademosi FlowTech on TikTok">
+            <TikTokIcon className="icon-sm" />
+          </a>
+          <a className="header-social" href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" aria-label="Bademosi FlowTech on Instagram">
+            <InstagramIcon className="icon-sm" />
+          </a>
+          <a className="header-call" href={`tel:${PHONE}`} aria-label={`Call Bademosi FlowTech directly on ${PHONE_DISPLAY}`}>
+            <PhoneIcon className="icon-sm" />
+            <span className="label">{PHONE_DISPLAY}</span>
+          </a>
+        </div>
       </div>
     </header>
   )

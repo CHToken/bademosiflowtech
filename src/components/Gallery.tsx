@@ -373,7 +373,7 @@ export default function Gallery() {
       id="gallery"
       titleId="gallery-title"
       eyebrow="Recent projects"
-      title="Completed work across Lagos"
+      title="Completed work across Lagos and beyond"
       lead="Real on-site jobs for homes and commercial properties. Tap any project for photos, videos and full technical details."
       center
     >
@@ -530,7 +530,7 @@ export default function Gallery() {
             <span className="badge-craftsman">
               <SparklesIcon className="icon-sm" /> Workmanship warranty
             </span>
-            <h3>Why Lagos homes and businesses choose Bademosi FlowTech</h3>
+            <h3>Why homes and businesses choose Bademosi FlowTech</h3>
             <p>
               We replace corroded, leaking pipes with precision heat-fused PPR and pressure-tested copper
               installations built to last decades, and every job is backed by a workmanship warranty.

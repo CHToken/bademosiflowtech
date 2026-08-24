@@ -7,6 +7,7 @@ const SERVICES = [
   'Emergency pipe repair',
   'Leak detection & repair',
   'Drain unblocking',
+  'Home plumbing maintenance',
   'Borehole & water tank setup',
   'Bathroom pipe fitting',
   'Water heater installation',

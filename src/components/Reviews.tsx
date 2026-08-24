@@ -43,7 +43,7 @@ export default function Reviews() {
       id="reviews"
       titleId="reviews-title"
       eyebrow="Client feedback"
-      title="Trusted by Lagos homeowners and businesses"
+      title="Trusted by homeowners and businesses"
       lead="Every job is quoted upfront and backed by a workmanship warranty."
       center
     >

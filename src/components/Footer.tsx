@@ -1,4 +1,5 @@
-import { PHONE, PHONE_DISPLAY, WA_LINK } from '../constants'
+import { PHONE, PHONE_DISPLAY, WA_LINK, TIKTOK_URL, INSTAGRAM_URL } from '../constants'
+import { TikTokIcon, InstagramIcon } from './Icons'
 
 export default function Footer() {
   return (
@@ -10,10 +11,30 @@ export default function Footer() {
               <img src="/logo.svg" alt="Bademosi FlowTech" width="200" height="45" />
             </a>
             <p className="footer-blurb">
-              Licensed plumbing contractor for homes and businesses. Emergency repairs, borehole and water system
-              installations, and building plumbing across Lagos, Abuja and Port Harcourt, with a workmanship warranty
-              on every job.
+              Licensed plumbing contractor for homes and businesses. Emergency repairs, household plumbing, borehole
+              and water system installations, and building plumbing across Lagos, Abuja, Ogun, Ibadan, Ondo and
+              Asaba–Onitsha, with a workmanship warranty on every job.
             </p>
+            <div className="footer-socials">
+              <a
+                href={TIKTOK_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Follow Bademosi FlowTech on TikTok"
+              >
+                <TikTokIcon className="icon" />
+                TikTok
+              </a>
+              <a
+                href={INSTAGRAM_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Follow Bademosi FlowTech on Instagram"
+              >
+                <InstagramIcon className="icon" />
+                Instagram
+              </a>
+            </div>
           </div>
           <div className="footer-col">
             <h4>Services</h4>
@@ -22,13 +43,13 @@ export default function Footer() {
                 <a href="#services">Emergency repairs</a>
               </li>
               <li>
+                <a href="#services">Household plumbing</a>
+              </li>
+              <li>
                 <a href="#services">Borehole &amp; water systems</a>
               </li>
               <li>
                 <a href="#services">Building &amp; condict plumbing</a>
-              </li>
-              <li>
-                <a href="#services">Modern installations</a>
               </li>
             </ul>
           </div>
@@ -61,7 +82,7 @@ export default function Footer() {
                 </a>
               </li>
               <li>24/7 emergency response</li>
-              <li>Lagos · Abuja · Port Harcourt</li>
+              <li>Lagos · Abuja · Ogun · Ibadan · Ondo · Asaba–Onitsha</li>
             </ul>
           </div>
         </div>
