@@ -4,15 +4,18 @@ import { CheckIcon, PhoneIcon, WhatsAppIcon } from './Icons'
 import { PHONE, PHONE_DISPLAY, WA_LINK, WHATSAPP_NUMBER } from '../constants'
 
 const SERVICES = [
-  'Borehole & water tank setup',
+  'Emergency pipe repair',
   'Leak detection & repair',
-  'Bathroom pipe fitting',
   'Drain unblocking',
+  'Borehole & water tank setup',
+  'Bathroom pipe fitting',
   'Water heater installation',
   'Toilet repair & replacement',
   'Kitchen plumbing',
-  'Emergency pipe repair',
-  'Emergency, not sure what\u2019s wrong',
+  'Building plumbing systems',
+  'Condict & civil plumbing',
+  'Water systems & modern plumbing',
+  'Not sure, need an assessment',
 ]
 
 export default function Booking() {
@@ -46,7 +49,8 @@ export default function Booking() {
             <p className="eyebrow">Get a quote</p>
             <h2 id="book-title">Quick quote in minutes</h2>
             <p className="section-lead">
-              Tell us what you need. We reply on WhatsApp with a price, usually within 10 minutes.
+              Tell us what you need and where. We reply on WhatsApp with a price and timeline, usually within 10
+              minutes during working hours.
             </p>
           </Reveal>
           <Reveal>
@@ -104,7 +108,7 @@ export default function Booking() {
           <Reveal>
             <div className="contact-card">
               <h3>Prefer to talk?</h3>
-              <p>For emergencies, calling is always fastest. We answer 24 hours a day, 7 days a week.</p>
+              <p>For emergencies, calling is always fastest. Our lines are open 24 hours a day, 7 days a week.</p>
               <a className="btn btn-emergency btn-block" href={`tel:${PHONE}`}>
                 <PhoneIcon className="icon" />
                 Call {PHONE_DISPLAY}

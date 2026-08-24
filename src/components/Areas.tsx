@@ -23,8 +23,8 @@ export default function Areas() {
           <p className="eyebrow">Coverage areas</p>
           <h2 id="areas-title">Where we work</h2>
           <p className="areas-note">
-            Fast response across <strong>Lagos mainland and island</strong>. Also serving{' '}
-            <strong>Abuja</strong> and <strong>Port Harcourt</strong> for installations and contracts.
+            Emergency response across <strong>Lagos mainland and island</strong>, with plumbing projects and
+            contracts delivered in <strong>Abuja</strong> and <strong>Port Harcourt</strong>.
           </p>
         </Reveal>
         <Reveal>

@@ -14,15 +14,25 @@ import {
   SparklesIcon,
   ShieldCheckIcon,
   VolumeIcon,
+  VolumeMuteIcon,
+  CloudIcon,
 } from './Icons'
 import { PHONE, PHONE_DISPLAY, WHATSAPP_NUMBER } from '../constants'
+import {
+  getCloudinaryImageUrl,
+  getCloudinaryVideoUrl,
+  getCloudinaryVideoPoster,
+  isCloudinaryUrl,
+} from '../utils/cloudinary'
 
 export interface GalleryItem {
   id: string
   title: string
   category: 'Borehole & Tanks' | 'Leak & Burst Pipe' | 'Bathroom & Sanitary' | 'Water Heaters' | 'Drainage & Sewer'
   mediaType: 'photo' | 'video'
-  image: string
+  image: string // Local path or Cloudinary Image URL
+  videoUrl?: string // Cloudinary Video URL or local MP4/WebM URL
+  poster?: string // Optional custom poster (defaults to image or Cloudinary auto-poster)
   duration?: string
   location: string
   description: string
@@ -31,6 +41,13 @@ export interface GalleryItem {
   specs?: { label: string; value: string }[]
 }
 
+/**
+ * Gallery Items List
+ *
+ * NOTE: Both `image` and `videoUrl` fully support Cloudinary URLs!
+ * Example Cloudinary Image: https://res.cloudinary.com/your-cloud-name/image/upload/v1234/project.jpg
+ * Example Cloudinary Video: https://res.cloudinary.com/your-cloud-name/video/upload/v1234/leak_fix_demo.mp4
+ */
 const GALLERY_ITEMS: GalleryItem[] = [
   {
     id: 'borehole-tank-ajah',
@@ -55,6 +72,8 @@ const GALLERY_ITEMS: GalleryItem[] = [
     mediaType: 'video',
     duration: '1:15',
     image: '/gallery/leak-repair.jpg',
+    // Supports direct Cloudinary video streams
+    videoUrl: 'https://res.cloudinary.com/demo/video/upload/f_auto:video,q_auto/samples/cld-sample-video.mp4',
     location: 'Ikeja GRA',
     description:
       'Watch how we identify non-visible hidden pipe leaks behind cabinets without unnecessary demolition, then complete a precision copper and PPR heat-fusion joint under 6-bar pressure test.',
@@ -105,6 +124,7 @@ const GALLERY_ITEMS: GalleryItem[] = [
     mediaType: 'video',
     duration: '0:52',
     image: '/gallery/drain-cleaning.jpg',
+    videoUrl: 'https://res.cloudinary.com/demo/video/upload/f_auto:video,q_auto/samples/sea-turtle.mp4',
     location: 'Surulere',
     description:
       'Demonstration of our heavy-duty motorized auger machine clearing stubborn solid blockages, tree roots, and sediment from residential compound main inspection chambers.',
@@ -123,6 +143,7 @@ const GALLERY_ITEMS: GalleryItem[] = [
     mediaType: 'video',
     duration: '1:40',
     image: '/gallery/master-craftsman.jpg',
+    videoUrl: 'https://res.cloudinary.com/demo/video/upload/f_auto:video,q_auto/samples/elephants.mp4',
     location: 'Ikoyi',
     description:
       'Master plumber Bademosi calibrating individual floor pressure balancing valves, booster pumps, and twin dial gauges to ensure uniform high pressure across all 3 floors.',
@@ -151,11 +172,22 @@ type MediaFilter = 'all' | 'photo' | 'video'
 export default function Gallery() {
   const [activeCategory, setActiveCategory] = useState<CategoryFilter>('All')
   const [activeMedia, setActiveMedia] = useState<MediaFilter>('all')
+  const [hasFiltered, setHasFiltered] = useState(false)
   const [selectedItem, setSelectedItem] = useState<GalleryItem | null>(null)
+  const [lastFocusedElement, setLastFocusedElement] = useState<HTMLElement | null>(null)
+
+  // Real / simulated video playback state
   const [isPlayingVideo, setIsPlayingVideo] = useState(false)
   const [videoProgress, setVideoProgress] = useState(0)
+  const [currentTimeSec, setCurrentTimeSec] = useState(0)
+  const [durationSec, setDurationSec] = useState(0)
+  const [isMuted, setIsMuted] = useState(false)
   const [isBeforeAfterActive, setIsBeforeAfterActive] = useState(false)
-  const videoIntervalRef = useRef<number | null>(null)
+
+  const videoElementRef = useRef<HTMLVideoElement | null>(null)
+  const simulatedTimerRef = useRef<number | null>(null)
+  const modalCloseRef = useRef<HTMLButtonElement | null>(null)
+  const modalRef = useRef<HTMLDivElement | null>(null)
 
   const filteredItems = GALLERY_ITEMS.filter((item) => {
     const matchesCat = activeCategory === 'All' || item.category === activeCategory
@@ -163,16 +195,38 @@ export default function Gallery() {
     return matchesCat && matchesMedia
   })
 
-  // Keyboard navigation for modal
+  // Keyboard navigation for modal: Escape closes, Tab stays inside
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
+      if (!selectedItem) return
       if (e.key === 'Escape') {
         closeModal()
+        return
+      }
+      if (e.key === 'Tab') {
+        const modal = modalRef.current
+        if (!modal) return
+        const focusables = modal.querySelectorAll<HTMLElement>(
+          'button, a[href], video, [role="slider"], [tabindex]:not([tabindex="-1"])',
+        )
+        if (focusables.length === 0) return
+        const first = focusables[0]
+        const last = focusables[focusables.length - 1]
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault()
+          last.focus()
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault()
+          first.focus()
+        }
       }
     }
     if (selectedItem) {
       window.addEventListener('keydown', handleKeyDown)
       document.body.style.overflow = 'hidden'
+      // Move focus into the modal
+      const focusTarget = modalCloseRef.current || modalRef.current
+      focusTarget?.focus()
     } else {
       document.body.style.overflow = ''
     }
@@ -182,10 +236,62 @@ export default function Gallery() {
     }
   }, [selectedItem])
 
-  // Simulated video playback engine
+  // Reset video state on item selection
+  function openModal(item: GalleryItem, trigger?: HTMLElement | null) {
+    setLastFocusedElement(trigger ?? (document.activeElement as HTMLElement | null))
+    setSelectedItem(item)
+    setVideoProgress(0)
+    setCurrentTimeSec(0)
+    setDurationSec(0)
+    setIsPlayingVideo(item.mediaType === 'video')
+  }
+
+  function closeModal() {
+    if (videoElementRef.current) {
+      videoElementRef.current.pause()
+    }
+    if (simulatedTimerRef.current) {
+      clearInterval(simulatedTimerRef.current)
+    }
+    setSelectedItem(null)
+    setIsPlayingVideo(false)
+    setVideoProgress(0)
+    // Return focus to the card that opened the modal
+    lastFocusedElement?.focus()
+  }
+
+  // Handle Play/Pause toggle (Native HTML5 or Simulated)
+  function togglePlayVideo() {
+    if (selectedItem?.videoUrl && videoElementRef.current) {
+      if (videoElementRef.current.paused) {
+        videoElementRef.current.play().catch(() => {
+          // In case browser autoplay policy prevents audio play
+          if (videoElementRef.current) {
+            videoElementRef.current.muted = true
+            setIsMuted(true)
+            videoElementRef.current.play()
+          }
+        })
+        setIsPlayingVideo(true)
+      } else {
+        videoElementRef.current.pause()
+        setIsPlayingVideo(false)
+      }
+    } else {
+      // Simulated video engine fallback
+      if (videoProgress >= 100) {
+        setVideoProgress(0)
+        setIsPlayingVideo(true)
+      } else {
+        setIsPlayingVideo((prev) => !prev)
+      }
+    }
+  }
+
+  // Simulated timer when no native video element is used
   useEffect(() => {
-    if (isPlayingVideo) {
-      videoIntervalRef.current = window.setInterval(() => {
+    if (isPlayingVideo && (!selectedItem?.videoUrl || !videoElementRef.current)) {
+      simulatedTimerRef.current = window.setInterval(() => {
         setVideoProgress((prev) => {
           if (prev >= 100) {
             setIsPlayingVideo(false)
@@ -194,33 +300,67 @@ export default function Gallery() {
           return prev + 1.2
         })
       }, 150)
-    } else if (videoIntervalRef.current) {
-      clearInterval(videoIntervalRef.current)
+    } else if (simulatedTimerRef.current) {
+      clearInterval(simulatedTimerRef.current)
     }
     return () => {
-      if (videoIntervalRef.current) clearInterval(videoIntervalRef.current)
+      if (simulatedTimerRef.current) clearInterval(simulatedTimerRef.current)
     }
-  }, [isPlayingVideo])
+  }, [isPlayingVideo, selectedItem])
 
-  function openModal(item: GalleryItem) {
-    setSelectedItem(item)
-    setVideoProgress(0)
-    setIsPlayingVideo(item.mediaType === 'video')
+  // Native video events
+  function handleNativeTimeUpdate() {
+    const v = videoElementRef.current
+    if (!v) return
+    const cur = v.currentTime
+    const dur = v.duration || 1
+    setCurrentTimeSec(cur)
+    setDurationSec(dur)
+    setVideoProgress((cur / dur) * 100)
   }
 
-  function closeModal() {
-    setSelectedItem(null)
+  function handleNativeLoadedMetadata() {
+    const v = videoElementRef.current
+    if (!v) return
+    setDurationSec(v.duration)
+    if (isPlayingVideo) {
+      v.play().catch(() => {
+        v.muted = true
+        setIsMuted(true)
+        v.play()
+      })
+    }
+  }
+
+  function handleNativeEnded() {
     setIsPlayingVideo(false)
-    setVideoProgress(0)
+    setVideoProgress(100)
   }
 
-  function togglePlayVideo() {
-    if (videoProgress >= 100) {
-      setVideoProgress(0)
-      setIsPlayingVideo(true)
-    } else {
-      setIsPlayingVideo((prev) => !prev)
+  function handleScrub(e: React.MouseEvent<HTMLDivElement>) {
+    const rect = e.currentTarget.getBoundingClientRect()
+    const clickPos = Math.min(Math.max((e.clientX - rect.left) / rect.width, 0), 1)
+    const newProgress = clickPos * 100
+    setVideoProgress(newProgress)
+
+    if (videoElementRef.current && videoElementRef.current.duration) {
+      videoElementRef.current.currentTime = clickPos * videoElementRef.current.duration
     }
+  }
+
+  function toggleMute() {
+    if (videoElementRef.current) {
+      videoElementRef.current.muted = !videoElementRef.current.muted
+      setIsMuted(videoElementRef.current.muted)
+    } else {
+      setIsMuted((prev) => !prev)
+    }
+  }
+
+  function formatTime(seconds: number): string {
+    const mins = Math.floor(seconds / 60)
+    const secs = Math.floor(seconds % 60)
+    return `${mins}:${secs < 10 ? '0' : ''}${secs}`
   }
 
   function getWhatsAppQuoteLink(item: GalleryItem) {
@@ -232,9 +372,9 @@ export default function Gallery() {
     <Section
       id="gallery"
       titleId="gallery-title"
-      eyebrow="Real Proof of Master Craftsmanship"
-      title="Recent Projects, Photos & Video Walkthroughs"
-      lead="See real on-site work completed personally by Bademosi FlowTech across Lagos. No stock pictures, no outsourced handymen — genuine master plumbing."
+      eyebrow="Recent projects"
+      title="Completed work across Lagos"
+      lead="Real on-site jobs for homes and commercial properties. Tap any project for photos, videos and full technical details."
       center
     >
       {/* Media Type & Category Filters */}
@@ -243,25 +383,34 @@ export default function Gallery() {
           <button
             type="button"
             className={`media-tab ${activeMedia === 'all' ? 'active' : ''}`}
-            onClick={() => setActiveMedia('all')}
+            onClick={() => {
+              setActiveMedia('all')
+              setHasFiltered(true)
+            }}
           >
             All Media ({GALLERY_ITEMS.length})
           </button>
           <button
             type="button"
             className={`media-tab ${activeMedia === 'photo' ? 'active' : ''}`}
-            onClick={() => setActiveMedia('photo')}
+            onClick={() => {
+              setActiveMedia('photo')
+              setHasFiltered(true)
+            }}
           >
             <ImageIcon className="icon-sm" />
-            Photos (3)
+            Photos ({GALLERY_ITEMS.filter((i) => i.mediaType === 'photo').length})
           </button>
           <button
             type="button"
             className={`media-tab ${activeMedia === 'video' ? 'active' : ''}`}
-            onClick={() => setActiveMedia('video')}
+            onClick={() => {
+              setActiveMedia('video')
+              setHasFiltered(true)
+            }}
           >
             <VideoIcon className="icon-sm" />
-            Video Demos (3)
+            Videos ({GALLERY_ITEMS.filter((i) => i.mediaType === 'video').length})
           </button>
         </div>
 
@@ -271,7 +420,10 @@ export default function Gallery() {
               key={cat}
               type="button"
               className={`cat-pill ${activeCategory === cat ? 'active' : ''}`}
-              onClick={() => setActiveCategory(cat)}
+              onClick={() => {
+                setActiveCategory(cat)
+                setHasFiltered(true)
+              }}
             >
               {cat}
             </button>
@@ -280,86 +432,108 @@ export default function Gallery() {
       </div>
 
       {/* Gallery Grid */}
-      <div className="gallery-grid">
-        {filteredItems.map((item) => (
-          <Reveal key={item.id}>
-            <article
-              className={`gallery-card ${item.mediaType === 'video' ? 'gallery-card-video' : ''}`}
-              onClick={() => openModal(item)}
-            >
-              <div className="gallery-media-wrapper">
-                <img
-                  src={item.image}
-                  alt={item.title}
-                  loading="lazy"
-                  className="gallery-thumb"
-                />
-                <div className="gallery-overlay">
-                  <span className="gallery-action-badge">
-                    {item.mediaType === 'video' ? (
-                      <>
-                        <PlayIcon className="icon-sm" /> Watch Demonstration
-                      </>
-                    ) : (
-                      <>
-                        <ExpandIcon className="icon-sm" /> View High-Res
-                      </>
-                    )}
-                  </span>
-                </div>
+      <div className={`gallery-grid${hasFiltered ? ' grid-animate' : ''}`} key={`${activeCategory}-${activeMedia}`}>
+        {filteredItems.map((item) => {
+          const displayImage = getCloudinaryImageUrl(item.image, {
+            width: 800,
+            quality: 'auto',
+            format: 'auto',
+          })
+          const isCloudinary = isCloudinaryUrl(item.image) || (item.videoUrl && isCloudinaryUrl(item.videoUrl))
 
-                {/* Top Badges */}
-                <div className="gallery-top-tags">
-                  <span className={`media-badge ${item.mediaType}`}>
-                    {item.mediaType === 'video' ? (
-                      <>
-                        <VideoIcon className="icon-xs" /> Video Demo {item.duration && `· ${item.duration}`}
-                      </>
-                    ) : (
-                      <>
-                        <ImageIcon className="icon-xs" /> High-Res Photo
-                      </>
-                    )}
-                  </span>
-                  <span className="location-badge">{item.location}</span>
-                </div>
+          return (
+            <Reveal key={item.id}>
+              <article className={`gallery-card ${item.mediaType === 'video' ? 'gallery-card-video' : ''}`}>
+                <button
+                  type="button"
+                  className="gallery-card-button"
+                  onClick={(e) => openModal(item, e.currentTarget)}
+                  aria-label={`View project: ${item.title}, ${item.location}`}
+                >
+                  <div className="gallery-media-wrapper">
+                    <img
+                      src={displayImage}
+                      alt=""
+                      loading="lazy"
+                      width="800"
+                      height="500"
+                      className="gallery-thumb"
+                    />
+                    <div className="gallery-overlay">
+                      <span className="gallery-action-badge">
+                        {item.mediaType === 'video' ? (
+                          <>
+                            <PlayIcon className="icon-sm" /> Watch video walkthrough
+                          </>
+                        ) : (
+                          <>
+                            <ExpandIcon className="icon-sm" /> View photo details
+                          </>
+                        )}
+                      </span>
+                    </div>
 
-                {item.mediaType === 'video' && (
-                  <div className="video-card-play-btn" aria-hidden="true">
-                    <span className="play-pulse" />
-                    <PlayIcon className="icon-play" />
+                    {/* Top Badges */}
+                    <div className="gallery-top-tags">
+                      <span className={`media-badge ${item.mediaType}`}>
+                        {item.mediaType === 'video' ? (
+                          <>
+                            <VideoIcon className="icon-xs" /> Video {item.duration && `· ${item.duration}`}
+                          </>
+                        ) : (
+                          <>
+                            <ImageIcon className="icon-xs" /> Photo
+                          </>
+                        )}
+                      </span>
+                      <div className="tag-cluster">
+                        {isCloudinary && (
+                          <span className="cld-badge" title="HD quality">
+                            <CloudIcon className="icon-xs" /> HD
+                          </span>
+                        )}
+                        <span className="location-badge">{item.location}</span>
+                      </div>
+                    </div>
+
+                    {item.mediaType === 'video' && (
+                      <div className="video-card-play-btn" aria-hidden="true">
+                        <span className="play-pulse" />
+                        <PlayIcon className="icon-play" />
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
 
-              <div className="gallery-card-body">
-                <span className="item-category">{item.category}</span>
-                <h3 className="item-title">{item.title}</h3>
-                <p className="item-desc">{item.description}</p>
-                <div className="item-highlights">
-                  {item.highlights.slice(0, 2).map((hl) => (
-                    <span key={hl} className="highlight-tag">
-                      <CheckIcon className="icon-xs" /> {hl}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </article>
-          </Reveal>
-        ))}
+                  <div className="gallery-card-body">
+                    <span className="item-category">{item.category}</span>
+                    <h3 className="item-title">{item.title}</h3>
+                    <p className="item-desc">{item.description}</p>
+                    <div className="item-highlights">
+                      {item.highlights.slice(0, 2).map((hl) => (
+                        <span key={hl} className="highlight-tag">
+                          <CheckIcon className="icon-xs" /> {hl}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </button>
+              </article>
+            </Reveal>
+          )
+        })}
       </div>
 
-      {/* Interactive Before & After Master Craftsmanship Highlight */}
+      {/* Interactive Before & After Craftsmanship Highlight */}
       <Reveal className="before-after-box">
         <div className="before-after-inner">
           <div className="before-after-text">
             <span className="badge-craftsman">
-              <SparklesIcon className="icon-sm" /> Direct Work Guarantee
+              <SparklesIcon className="icon-sm" /> Workmanship warranty
             </span>
-            <h3>Why Lagos Homeowners Choose Direct Master Plumbing</h3>
+            <h3>Why Lagos homes and businesses choose Bademosi FlowTech</h3>
             <p>
-              When you call Bademosi FlowTech, you avoid risky middleman handymen. We replace corroded, leaking pipes
-              with precision heat-fused PPR and pressure-tested copper installations built to last decades.
+              We replace corroded, leaking pipes with precision heat-fused PPR and pressure-tested copper
+              installations built to last decades, and every job is backed by a workmanship warranty.
             </p>
             <div className="before-after-controls">
               <button
@@ -367,37 +541,41 @@ export default function Gallery() {
                 className={`btn-ba ${!isBeforeAfterActive ? 'active' : ''}`}
                 onClick={() => setIsBeforeAfterActive(false)}
               >
-                Standard Problem (Before)
+                Typical problem (Before)
               </button>
               <button
                 type="button"
                 className={`btn-ba ${isBeforeAfterActive ? 'active' : ''}`}
                 onClick={() => setIsBeforeAfterActive(true)}
               >
-                Bademosi Master Fix (After)
+                Bademosi standard (After)
               </button>
             </div>
           </div>
           <div className="before-after-visual">
             {!isBeforeAfterActive ? (
-              <div className="ba-panel ba-before">
-                <div className="ba-tag tag-bad">Typical Problem: Leaking, Rusted Joint & Low Pressure</div>
+                <div className="ba-panel ba-before">
+                <div className="ba-tag tag-bad">Typical problem: leaking, rusted joint and low pressure</div>
                 <img
-                  src="/gallery/leak-repair.jpg"
+                  src={getCloudinaryImageUrl('/gallery/leak-repair.jpg', { width: 800 })}
                   alt="Pipe leak repair inspection"
                   className="ba-img grayscale"
+                  width="800"
+                  height="500"
                 />
                 <div className="ba-caption">
                   Hidden pinhole leak causing wall dampness and dropping whole-house water pressure.
                 </div>
               </div>
             ) : (
-              <div className="ba-panel ba-after">
-                <div className="ba-tag tag-good">Bademosi Standard: Precision Heat-Welded Manifold</div>
+                <div className="ba-panel ba-after">
+                <div className="ba-tag tag-good">Bademosi standard: precision heat-welded manifold</div>
                 <img
-                  src="/gallery/master-craftsman.jpg"
-                  alt="Master plumber calibrated manifold"
+                  src={getCloudinaryImageUrl('/gallery/master-craftsman.jpg', { width: 800 })}
+                  alt="Plumber calibrating a manifold"
                   className="ba-img"
+                  width="800"
+                  height="500"
                 />
                 <div className="ba-caption">
                   Zero-leak calibrated brass valves with dual pressure gauges tested at 6.0 Bar.
@@ -408,15 +586,16 @@ export default function Gallery() {
         </div>
       </Reveal>
 
-      {/* Modal: Fullscreen Lightbox & Video Player */}
+      {/* Modal: Fullscreen Lightbox & Cloudinary Video Player */}
       {selectedItem && (
-        <div className="modal-backdrop" onClick={closeModal} role="dialog" aria-modal="true">
+        <div className="modal-backdrop" onClick={closeModal} role="dialog" aria-modal="true" aria-label={selectedItem.title} ref={modalRef}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <button
               type="button"
               className="modal-close-btn"
               onClick={closeModal}
-              aria-label="Close project showcase"
+              aria-label="Close project details"
+              ref={modalCloseRef}
             >
               <CloseIcon className="icon" />
             </button>
@@ -425,63 +604,150 @@ export default function Gallery() {
               {/* Media Section */}
               <div className="modal-media-col">
                 <div className="modal-media-viewport">
-                  <img
-                    src={selectedItem.image}
-                    alt={selectedItem.title}
-                    className="modal-main-img"
-                  />
+                  {selectedItem.mediaType === 'video' && selectedItem.videoUrl ? (
+                    <>
+                      {/* Native HTML5 Video Stream (Fully supports Cloudinary URLs) */}
+                      <video
+                        ref={videoElementRef}
+                        src={getCloudinaryVideoUrl(selectedItem.videoUrl)}
+                        poster={getCloudinaryVideoPoster(selectedItem.videoUrl) || selectedItem.image}
+                        className="modal-main-video"
+                        playsInline
+                        preload="metadata"
+                        onTimeUpdate={handleNativeTimeUpdate}
+                        onLoadedMetadata={handleNativeLoadedMetadata}
+                        onEnded={handleNativeEnded}
+                        onClick={togglePlayVideo}
+                      />
 
-                  {/* Video Player Simulation Overlay */}
-                  {selectedItem.mediaType === 'video' && (
-                    <div className="video-player-overlay">
-                      <div className="video-header-bar">
-                        <span className="live-demo-pill">
-                          <span className="pulse-dot" /> Live Master Demonstration
-                        </span>
-                        <span className="video-time">
-                          {Math.floor((videoProgress / 100) * 75)}s / {selectedItem.duration}
-                        </span>
-                      </div>
-
-                      <div className="video-center-action" onClick={togglePlayVideo}>
-                        <button
-                          type="button"
-                          className="video-big-play"
-                          aria-label={isPlayingVideo ? 'Pause demonstration' : 'Play demonstration'}
-                        >
-                          {isPlayingVideo ? <PauseIcon className="icon" /> : <PlayIcon className="icon" />}
-                        </button>
-                      </div>
-
-                      {/* Video Scrubber & Controls */}
-                      <div className="video-controls-bar">
-                        <button
-                          type="button"
-                          className="ctrl-btn"
-                          onClick={togglePlayVideo}
-                          aria-label={isPlayingVideo ? 'Pause' : 'Play'}
-                        >
-                          {isPlayingVideo ? <PauseIcon className="icon-sm" /> : <PlayIcon className="icon-sm" />}
-                        </button>
-
-                        <div
-                          className="progress-track"
-                          onClick={(e) => {
-                            const rect = e.currentTarget.getBoundingClientRect()
-                            const clickPos = (e.clientX - rect.left) / rect.width
-                            setVideoProgress(Math.min(Math.max(clickPos * 100, 0), 100))
-                          }}
-                        >
-                          <div className="progress-fill" style={{ width: `${videoProgress}%` }} />
-                          <div className="progress-handle" style={{ left: `${videoProgress}%` }} />
+                      {/* Custom Video Controls Overlay */}
+                      <div className="video-player-overlay">
+                        <div className="video-header-bar">
+                          <span className="live-demo-pill">
+                            <span className="pulse-dot" /> Video walkthrough
+                          </span>
+                          <span className="video-time">
+                            {formatTime(currentTimeSec || (videoProgress / 100) * 75)} /{' '}
+                            {durationSec ? formatTime(durationSec) : selectedItem.duration}
+                          </span>
                         </div>
 
-                        <div className="audio-badge" title="Master Craftsman Audio Commentary">
-                          <VolumeIcon className="icon-xs" />
-                          <span>HD 1080p</span>
+                        {!isPlayingVideo && (
+                          <div className="video-center-action" onClick={togglePlayVideo}>
+                            <button
+                              type="button"
+                              className="video-big-play"
+                              aria-label="Play video demonstration"
+                            >
+                              <PlayIcon className="icon" />
+                            </button>
+                          </div>
+                        )}
+
+                        <div className="video-controls-bar">
+                          <button
+                            type="button"
+                            className="ctrl-btn"
+                            onClick={togglePlayVideo}
+                            aria-label={isPlayingVideo ? 'Pause' : 'Play'}
+                          >
+                            {isPlayingVideo ? <PauseIcon className="icon-sm" /> : <PlayIcon className="icon-sm" />}
+                          </button>
+
+                          <div
+                            className="progress-track"
+                            onClick={handleScrub}
+                            role="slider"
+                            aria-valuenow={Math.round(videoProgress)}
+                            aria-valuemin={0}
+                            aria-valuemax={100}
+                          >
+                            <div className="progress-fill" style={{ width: `${videoProgress}%` }} />
+                            <div className="progress-handle" style={{ left: `${videoProgress}%` }} />
+                          </div>
+
+                          <button
+                            type="button"
+                            className="ctrl-btn"
+                            onClick={toggleMute}
+                            aria-label={isMuted ? 'Unmute' : 'Mute'}
+                          >
+                            {isMuted ? <VolumeMuteIcon className="icon-sm" /> : <VolumeIcon className="icon-sm" />}
+                          </button>
+
+                          <div className="audio-badge" title="HD video">
+                            <CloudIcon className="icon-xs" />
+                            <span>1080p HD</span>
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    </>
+                  ) : (
+                    <>
+                      {/* Photo or Simulated Walkthrough */}
+                      <img
+                        src={getCloudinaryImageUrl(selectedItem.image, {
+                          width: 1200,
+                          quality: 'auto',
+                          format: 'auto',
+                        })}
+                        alt={selectedItem.title}
+                        className="modal-main-img"
+                        width="1200"
+                        height="750"
+                      />
+
+                      {selectedItem.mediaType === 'video' && (
+                        <div className="video-player-overlay">
+                          <div className="video-header-bar">
+                            <span className="live-demo-pill">
+                              <span className="pulse-dot" /> Video walkthrough
+                            </span>
+                            <span className="video-time">
+                              {Math.floor((videoProgress / 100) * 75)}s / {selectedItem.duration}
+                            </span>
+                          </div>
+
+                          <div className="video-center-action" onClick={togglePlayVideo}>
+                            <button
+                              type="button"
+                              className="video-big-play"
+                              aria-label={isPlayingVideo ? 'Pause demonstration' : 'Play demonstration'}
+                            >
+                              {isPlayingVideo ? <PauseIcon className="icon" /> : <PlayIcon className="icon" />}
+                            </button>
+                          </div>
+
+                          <div className="video-controls-bar">
+                            <button
+                              type="button"
+                              className="ctrl-btn"
+                              onClick={togglePlayVideo}
+                              aria-label={isPlayingVideo ? 'Pause' : 'Play'}
+                            >
+                              {isPlayingVideo ? <PauseIcon className="icon-sm" /> : <PlayIcon className="icon-sm" />}
+                            </button>
+
+                            <div
+                              className="progress-track"
+                              onClick={(e) => {
+                                const rect = e.currentTarget.getBoundingClientRect()
+                                const clickPos = (e.clientX - rect.left) / rect.width
+                                setVideoProgress(Math.min(Math.max(clickPos * 100, 0), 100))
+                              }}
+                            >
+                              <div className="progress-fill" style={{ width: `${videoProgress}%` }} />
+                              <div className="progress-handle" style={{ left: `${videoProgress}%` }} />
+                            </div>
+
+                            <div className="audio-badge" title="HD video">
+                              <VolumeIcon className="icon-xs" />
+                              <span>HD 1080p</span>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </>
                   )}
                 </div>
               </div>
@@ -491,13 +757,18 @@ export default function Gallery() {
                 <div className="modal-tags">
                   <span className="pill-cat">{selectedItem.category}</span>
                   <span className="pill-loc">{selectedItem.location}</span>
+                  {isCloudinaryUrl(selectedItem.image) && (
+                    <span className="pill-cld">
+                      <CloudIcon className="icon-xs" /> HD
+                    </span>
+                  )}
                 </div>
 
                 <h2 className="modal-title">{selectedItem.title}</h2>
                 <p className="modal-desc">{selectedItem.description}</p>
 
                 {/* Technical highlights */}
-                <div className="modal-section-title">Key Workmanship Details</div>
+                <div className="modal-section-title">Key project details</div>
                 <ul className="modal-highlights-list">
                   {selectedItem.highlights.map((hl) => (
                     <li key={hl}>
@@ -510,7 +781,7 @@ export default function Gallery() {
                 {/* Video Step-by-Step Walkthrough */}
                 {selectedItem.videoSteps && (
                   <div className="video-steps-box">
-                    <div className="modal-section-title">Master Process Steps</div>
+                    <div className="modal-section-title">Process steps</div>
                     <div className="steps-timeline">
                       {selectedItem.videoSteps.map((step, idx) => {
                         const isStepActive = videoProgress >= (idx / selectedItem.videoSteps!.length) * 100
@@ -537,12 +808,12 @@ export default function Gallery() {
                   </div>
                 )}
 
-                {/* Owner Guarantee Callout */}
+                {/* Warranty Callout */}
                 <div className="modal-owner-badge">
                   <div className="owner-avatar">B</div>
                   <div>
-                    <strong>Direct Master Workmanship Guarantee</strong>
-                    <span>Handled & inspected personally by Bademosi FlowTech.</span>
+                    <strong>Workmanship warranty</strong>
+                    <span>Every project is inspected and backed by Bademosi FlowTech.</span>
                   </div>
                 </div>
 
@@ -555,11 +826,11 @@ export default function Gallery() {
                     rel="noopener noreferrer"
                   >
                     <WhatsAppIcon className="icon" />
-                    Request Quote for Similar Job
+                    Request quote for a similar job
                   </a>
                   <a className="btn btn-emergency btn-block" href={`tel:${PHONE}`}>
                     <PhoneIcon className="icon" />
-                    Call Plumber Directly ({PHONE_DISPLAY})
+                    Call {PHONE_DISPLAY}
                   </a>
                 </div>
               </div>

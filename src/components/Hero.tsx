@@ -1,12 +1,12 @@
 import { PHONE, PHONE_DISPLAY, WA_LINK } from '../constants'
-import { CheckIcon, PhoneIcon, WhatsAppIcon, ShieldCheckIcon, SparklesIcon } from './Icons'
+import { CheckIcon, PhoneIcon, WhatsAppIcon, ShieldCheckIcon, CalendarIcon } from './Icons'
 import Reveal from './Reveal'
 
 const TRUST_POINTS = [
-  'Direct Master Plumber — No Middlemen or Subcontractors',
-  '45-Minute Emergency Direct Response in Lagos',
-  'Upfront Transparent Pricing — Zero Call-out Charge for Booked Jobs',
-  '100% Clean Site Promise & Workmanship Guarantee',
+  'Licensed, insured plumbing contractor',
+  '45-minute average emergency response in Lagos',
+  'Itemized quotes before work begins',
+  'Workmanship warranty on every job',
 ]
 
 export default function Hero() {
@@ -14,35 +14,31 @@ export default function Hero() {
     <section className="hero" id="top">
       <div className="container hero-grid">
         <div className="hero-copy">
-          <div className="eyebrow-badge">
-            <span className="live-status-dot" aria-hidden="true" />
-            <span className="eyebrow-text">Independent Master Plumber · Lagos · 24/7 Direct Callouts</span>
-          </div>
+          <p className="eyebrow">Plumbing contractor · Lagos · 24/7 emergency response</p>
 
           <h1>
-            Pipe burst? Blocked drain? <br />
-            <span className="accent">I&apos;ll fix it right the first time.</span>
+            Pipe burst? Blocked drain? <span className="accent">We fix it right the first time.</span>
           </h1>
 
           <p className="lede">
-            You deal directly with <strong>Bademosi FlowTech</strong> — an independent, owner-operated master plumbing
-            service in Lagos. No middleman agencies, no call-center delays, and no subcontracting to random handymen.
-            From urgent midnight leak detection and drain unblocking to full borehole setups, water heaters, and luxury
-            bathroom pipe refitting — you get personal master craftsmanship and clean, guaranteed results on every job.
+            <strong>Bademosi FlowTech</strong> is a licensed plumbing contractor serving homes and businesses across
+            Lagos, Abuja and Port Harcourt. We handle emergency repairs, borehole and water system installations,
+            and full plumbing works for buildings, condict and modern developments, with clean workmanship and
+            guaranteed results on every job.
           </p>
 
           <div className="hero-ctas">
-            <a className="btn btn-emergency" href={`tel:${PHONE}`} aria-label={`Call Bademosi on ${PHONE_DISPLAY}`}>
+            <a className="btn btn-emergency" href={`tel:${PHONE}`} aria-label={`Call Bademosi FlowTech on ${PHONE_DISPLAY}`}>
               <PhoneIcon className="icon" />
-              Call Master Plumber ({PHONE_DISPLAY})
+              Call now ({PHONE_DISPLAY})
             </a>
             <a className="btn btn-wa" href={WA_LINK} target="_blank" rel="noopener noreferrer">
               <WhatsAppIcon className="icon" />
-              WhatsApp Direct
+              WhatsApp us
             </a>
-            <a className="btn btn-ghost" href="#gallery">
-              <SparklesIcon className="icon" />
-              View Work Gallery
+            <a className="btn btn-ghost" href="#book">
+              <CalendarIcon className="icon" />
+              Book a service
             </a>
           </div>
 
@@ -61,23 +57,25 @@ export default function Hero() {
             <div className="craftsman-img-container">
               <img
                 src="/gallery/master-craftsman.jpg"
-                alt="Master plumber Bademosi inspecting water manifold valves"
+                alt="Bademosi FlowTech plumber inspecting a water manifold installation"
                 className="craftsman-img"
+                width="960"
+                height="640"
               />
               <div className="craftsman-gradient-overlay" />
 
               <div className="craftsman-floating-badge top-badge">
                 <ShieldCheckIcon className="icon-sm text-sky" />
                 <div>
-                  <strong>Owner-Operated &amp; Insured</strong>
-                  <span>Direct Personal Accountability</span>
+                  <strong>Licensed &amp; insured</strong>
+                  <span>Workmanship warranty on every job</span>
                 </div>
               </div>
 
               <div className="craftsman-floating-badge bottom-badge">
                 <span className="pulse" aria-hidden="true" />
                 <div>
-                  <strong>Average Response: 45 Minutes</strong>
+                  <strong>Average response: 45 minutes</strong>
                   <span>Ikeja · Lekki · Ikoyi · Surulere · VI · Ajah</span>
                 </div>
               </div>
@@ -85,18 +83,18 @@ export default function Hero() {
 
             <div className="craftsman-card-footer">
               <div className="craftsman-stat">
-                <span className="stat-value">12+</span>
-                <span className="stat-label">Years Experience</span>
+                <span className="stat-value">8+</span>
+                <span className="stat-label">Years in business</span>
               </div>
               <div className="stat-divider" />
               <div className="craftsman-stat">
                 <span className="stat-value">2,400+</span>
-                <span className="stat-label">Direct Fixes</span>
+                <span className="stat-label">Jobs completed</span>
               </div>
               <div className="stat-divider" />
               <div className="craftsman-stat">
                 <span className="stat-value">100%</span>
-                <span className="stat-label">Master Guarantee</span>
+                <span className="stat-label">Workmanship warranty</span>
               </div>
             </div>
           </div>

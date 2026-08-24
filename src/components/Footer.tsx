@@ -10,8 +10,9 @@ export default function Footer() {
               <img src="/logo.svg" alt="Bademosi FlowTech" width="200" height="45" />
             </a>
             <p className="footer-blurb">
-              Independent master plumbing specialist serving Lagos, with direct project contracts across Abuja and Port
-              Harcourt. Personal master craftsmanship, transparent pricing, and 100% guaranteed work on every visit.
+              Licensed plumbing contractor for homes and businesses. Emergency repairs, borehole and water system
+              installations, and building plumbing across Lagos, Abuja and Port Harcourt, with a workmanship warranty
+              on every job.
             </p>
           </div>
           <div className="footer-col">
@@ -21,18 +22,18 @@ export default function Footer() {
                 <a href="#services">Emergency repairs</a>
               </li>
               <li>
-                <a href="#services">Borehole &amp; tanks</a>
+                <a href="#services">Borehole &amp; water systems</a>
               </li>
               <li>
-                <a href="#services">Drain unblocking</a>
+                <a href="#services">Building &amp; condict plumbing</a>
               </li>
               <li>
-                <a href="#services">Bathroom &amp; kitchen fitting</a>
+                <a href="#services">Modern installations</a>
               </li>
             </ul>
           </div>
           <div className="footer-col">
-            <h4>Work &amp; Trust</h4>
+            <h4>Work &amp; trust</h4>
             <ul>
               <li>
                 <a href="#gallery">Recent work gallery</a>
@@ -49,24 +50,24 @@ export default function Footer() {
             </ul>
           </div>
           <div className="footer-col">
-            <h4>Direct Contact</h4>
+            <h4>Contact</h4>
             <ul>
               <li>
                 <a href={`tel:${PHONE}`}>Call: {PHONE_DISPLAY}</a>
               </li>
               <li>
                 <a href={WA_LINK} target="_blank" rel="noopener noreferrer">
-                  WhatsApp direct
+                  WhatsApp us
                 </a>
               </li>
               <li>24/7 emergency response</li>
-              <li>No middleman fees</li>
+              <li>Lagos · Abuja · Port Harcourt</li>
             </ul>
           </div>
         </div>
         <div className="footer-bottom">
           <span>© 2026 Bademosi FlowTech — Plumbing Solutions. All rights reserved.</span>
-          <span>Independent Master Plumber · Lagos, Nigeria</span>
+          <span>Lagos, Nigeria</span>
         </div>
       </div>
     </footer>

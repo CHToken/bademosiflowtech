@@ -1,6 +1,6 @@
 import Section from './Section'
 import Reveal from './Reveal'
-import { StarIcon, ShieldCheckIcon } from './Icons'
+import { StarIcon } from './Icons'
 
 interface Review {
   quote: string
@@ -21,7 +21,7 @@ const REVIEWS: Review[] = [
   },
   {
     quote:
-      'He personally installed our dual borehole overhead tanks and booster pump in one day. Neat Schedule 80 piping, zero leaks, upfront honest quote with no hidden extras. Best plumber in Lagos.',
+      'He personally installed our dual borehole overhead tanks and booster pump in one day. Neat Schedule 80 piping, zero leaks, upfront honest quote with no hidden extras. Highly recommended.',
     name: 'Engr. Tunde A.',
     area: 'Surulere',
     initial: 'T',
@@ -42,24 +42,19 @@ export default function Reviews() {
     <Section
       id="reviews"
       titleId="reviews-title"
-      eyebrow="Direct Client Feedback"
-      title="Trusted by Lagos Homeowners & Landlords"
-      lead="Direct personal accountability on every callout. Honest pricing, master execution, and lasting reliability."
+      eyebrow="Client feedback"
+      title="Trusted by Lagos homeowners and businesses"
+      lead="Every job is quoted upfront and backed by a workmanship warranty."
       center
     >
       <div className="reviews-grid">
         {REVIEWS.map((review) => (
           <Reveal key={review.name}>
             <article className="review-card">
-              <div className="review-card-top">
-                <div className="stars" aria-label="Rated 5 out of 5 stars">
-                  {[0, 1, 2, 3, 4].map((i) => (
-                    <StarIcon key={i} className="icon-sm" />
-                  ))}
-                </div>
-                <span className="verified-badge">
-                  <ShieldCheckIcon className="icon-xs" /> Verified Customer
-                </span>
+              <div className="stars" aria-label="Rated 5 out of 5 stars">
+                {[0, 1, 2, 3, 4].map((i) => (
+                  <StarIcon key={i} className="icon-sm" />
+                ))}
               </div>
               <blockquote>&ldquo;{review.quote}&rdquo;</blockquote>
               <div className="review-service-tag">{review.service}</div>

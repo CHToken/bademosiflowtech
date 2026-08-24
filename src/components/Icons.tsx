@@ -231,3 +231,32 @@ export function VolumeIcon(props: IconProps) {
   )
 }
 
+export function VolumeMuteIcon(props: IconProps) {
+  return (
+    <svg {...svg(props)}>
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+      <line x1="23" y1="9" x2="17" y2="15" />
+      <line x1="17" y1="9" x2="23" y2="15" />
+    </svg>
+  )
+}
+
+export function CloudIcon(props: IconProps) {
+  return (
+    <svg {...svg(props)}>
+      <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z" />
+    </svg>
+  )
+}
+
+export function BuildingIcon(props: IconProps) {
+  return (
+    <svg {...svg(props)}>
+      <rect x="4" y="3" width="16" height="18" rx="1.5" />
+      <path d="M9 7h1.5M13.5 7H15M9 11h1.5M13.5 11H15M9 15h1.5M13.5 15H15" />
+      <path d="M8 21v-3h8v3" />
+    </svg>
+  )
+}
+
+

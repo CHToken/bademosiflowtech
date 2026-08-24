@@ -1,7 +1,6 @@
 import Header from './components/Header'
 import Hero from './components/Hero'
 import Services from './components/Services'
-import Stats from './components/Stats'
 import Gallery from './components/Gallery'
 import Reviews from './components/Reviews'
 import Areas from './components/Areas'
@@ -19,7 +18,6 @@ export default function App() {
       <main id="main">
         <Hero />
         <Services />
-        <Stats />
         <Gallery />
         <Reviews />
         <Areas />

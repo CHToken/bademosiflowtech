@@ -1,7 +1,7 @@
 import { ComponentType } from 'react'
 import Section from './Section'
 import Reveal from './Reveal'
-import { ArrowIcon, BathIcon, DrainIcon, HeaterIcon, KitchenIcon, SearchIcon, ToiletIcon, WaterDropIcon, WrenchIcon, IconProps } from './Icons'
+import { ArrowIcon, BathIcon, BuildingIcon, DrainIcon, HeaterIcon, KitchenIcon, SearchIcon, ToiletIcon, WaterDropIcon, WrenchIcon, IconProps } from './Icons'
 
 interface Service {
   name: string
@@ -9,15 +9,24 @@ interface Service {
   icon: ComponentType<IconProps>
 }
 
-const SERVICES: Service[] = [
-  { name: 'Borehole & water tank setup', description: 'Drilling, pumps and overhead tanks, installed and serviced.', icon: WaterDropIcon },
-  { name: 'Leak detection & repair', description: 'Find hidden leaks fast with pressure testing, then fix them for good.', icon: SearchIcon },
-  { name: 'Bathroom pipe fitting', description: 'Showers, WCs, washbasins and full bathroom re-piping.', icon: BathIcon },
-  { name: 'Drain unblocking', description: 'Clearing blocked sinks, toilets and drainage lines with the right tools.', icon: DrainIcon },
+const EMERGENCY_SERVICES: Service[] = [
+  { name: 'Emergency pipe repair', description: 'Burst or leaking lines isolated, repaired and pressure-tested, fast.', icon: WrenchIcon },
+  { name: 'Leak detection & repair', description: 'Hidden leaks located with pressure testing and fixed at the source.', icon: SearchIcon },
+  { name: 'Drain unblocking', description: 'Motorized clearing for blocked sinks, toilets and drainage lines.', icon: DrainIcon },
+]
+
+const INSTALLATION_SERVICES: Service[] = [
+  { name: 'Borehole & water tank setup', description: 'Drilling, submersible pumps, overhead tanks and distribution lines.', icon: WaterDropIcon },
+  { name: 'Bathroom pipe fitting', description: 'Showers, WCs and washbasins with concealed or surface piping.', icon: BathIcon },
   { name: 'Water heater installation', description: 'Electric and gas heaters fitted safely, with warranty.', icon: HeaterIcon },
-  { name: 'Toilet repair & replacement', description: 'Fix running, leaking or cracked WCs, or install a brand new one.', icon: ToiletIcon },
-  { name: 'Kitchen plumbing', description: 'Sinks, mixers, water filters and gas lines done right.', icon: KitchenIcon },
-  { name: 'Emergency pipe repair', description: 'Burst pipe? We isolate, repair and restore your water, fast.', icon: WrenchIcon },
+  { name: 'Toilet repair & replacement', description: 'Running, leaking or cracked WCs repaired or replaced.', icon: ToiletIcon },
+  { name: 'Kitchen plumbing', description: 'Sinks, mixers, water filters and gas lines done to standard.', icon: KitchenIcon },
+]
+
+const COMMERCIAL_SERVICES: Service[] = [
+  { name: 'Building plumbing systems', description: 'Supply, drainage and waste systems for residential buildings and commercial properties.', icon: BuildingIcon },
+  { name: 'Condict & civil plumbing', description: 'Site and structural pipework coordination for construction projects.', icon: WrenchIcon },
+  { name: 'Water systems & modern plumbing', description: 'Booster pumps, water treatment, smart heaters and modern fixture systems.', icon: WaterDropIcon },
 ]
 
 function handleBook(service: string) {
@@ -26,36 +35,62 @@ function handleBook(service: string) {
   document.getElementById('book')?.scrollIntoView({ behavior: 'smooth' })
 }
 
+function ServiceCard({ service }: { service: Service }) {
+  const Icon = service.icon
+  return (
+    <article className="service-card">
+      <div className="service-icon" aria-hidden="true">
+        <Icon className="icon" />
+      </div>
+      <h3>{service.name}</h3>
+      <p>{service.description}</p>
+      <button type="button" className="service-link" onClick={() => handleBook(service.name)}>
+        Request this service
+        <ArrowIcon className="icon-sm" />
+      </button>
+    </article>
+  )
+}
+
 export default function Services() {
   return (
     <Section
       id="services"
       titleId="services-title"
-      eyebrow="Master Plumbing Services"
-      title="Every Plumbing Job Handled Personally"
-      lead="From midnight emergency pipe bursts to complete borehole and luxury bathroom setups, I arrive with industrial-grade tools and handle the work directly to the highest standard."
+      eyebrow="Residential & commercial plumbing"
+      title="Plumbing services for homes and businesses"
+      lead="Emergency callouts, full installations, and complete water systems for buildings, commercial properties and modern developments across Lagos, Abuja and Port Harcourt."
       center
     >
-      <div className="services-grid">
-        {SERVICES.map((service) => {
-          const Icon = service.icon
-          return (
-            <Reveal key={service.name}>
-              <article className="service-card">
-                <div className="service-icon" aria-hidden="true">
-                  <Icon className="icon" />
-                </div>
-                <h3>{service.name}</h3>
-                <p>{service.description}</p>
-                <button type="button" className="service-link" onClick={() => handleBook(service.name)}>
-                  Book this
-                  <ArrowIcon className="icon-sm" />
-                </button>
-              </article>
-            </Reveal>
-          )
-        })}
-      </div>
+      <Reveal className="services-block">
+        <h3 className="services-group-title">Emergency &amp; repair</h3>
+        <p className="services-group-lead">Callouts answered 24/7, with a 45-minute average response across Lagos.</p>
+        <div className="services-grid">
+          {EMERGENCY_SERVICES.map((service) => (
+            <ServiceCard service={service} key={service.name} />
+          ))}
+        </div>
+      </Reveal>
+
+      <Reveal className="services-block">
+        <h3 className="services-group-title">Installations</h3>
+        <p className="services-group-lead">Planned work quoted upfront and completed to standard, with warranty.</p>
+        <div className="services-grid">
+          {INSTALLATION_SERVICES.map((service) => (
+            <ServiceCard service={service} key={service.name} />
+          ))}
+        </div>
+      </Reveal>
+
+      <Reveal className="services-block">
+        <h3 className="services-group-title">Commercial &amp; building projects</h3>
+        <p className="services-group-lead">Contracts for buildings, construction sites and modern developments.</p>
+        <div className="services-grid">
+          {COMMERCIAL_SERVICES.map((service) => (
+            <ServiceCard service={service} key={service.name} />
+          ))}
+        </div>
+      </Reveal>
     </Section>
   )
 }
