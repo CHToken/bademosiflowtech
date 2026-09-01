@@ -58,7 +58,7 @@ export default function Hero() {
 
           <h1 className="hero-oversized-title">
             Pipe burst? Blocked drain?{' '}
-            <span className="accent-text-glow">We fix it right the first time.</span>
+            <span className="accent-text-glow">We fix it right for you</span>
           </h1>
 
           <p className="hero-lead-text">
