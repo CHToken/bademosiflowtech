@@ -7,12 +7,13 @@ interface SectionProps {
   title: string
   lead?: string
   center?: boolean
+  className?: string
   children: ReactNode
 }
 
-export default function Section({ id, titleId, eyebrow, title, lead, center, children }: SectionProps) {
+export default function Section({ id, titleId, eyebrow, title, lead, center, className, children }: SectionProps) {
   return (
-    <section className="section" id={id} aria-labelledby={titleId}>
+    <section className={`section${className ? ` ${className}` : ''}`} id={id} aria-labelledby={titleId}>
       <div className="container">
         <div className={center ? 'section-head center' : 'section-head'}>
           <p className="eyebrow">{eyebrow}</p>

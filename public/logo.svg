@@ -1,7 +1,43 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 72" role="img" aria-label="Bademosi FlowTech Plumbing Solutions">
-  <rect x="4" y="4" width="64" height="64" rx="14" fill="#075985"/>
-  <path d="M56.8 33.9c-1.4 6.4-5.6 11.2-12.2 12.8-3 .8-6 .8-8.6 0-4-1.2-7.2-3.8-9.2-7.4-1.8-3.2-2.2-6.6-1.4-10 1.4-6.4 5.6-11.2 12.2-12.8 6.6-1.6 13 .8 16.6 6.4l-4.6 2.4c-2-3.2-5.6-4.6-9.4-3.8-3.8.8-6.4 4-7.2 7.8-.6 2.4-.2 4.8 1 7 .7 1.2 1.7 2.2 3 2.7 2.2.9 4.6.9 6.6 0 4.4-1 7.2-4 8-8.4l2.2.3z" fill="#FFFFFF"/>
-  <path d="M56 12c1.5 1.9 2.4 3 2.4 4a2.4 2.4 0 1 1-4.8 0c0-1 .9-2.1 2.4-4z" fill="#38BDF8"/>
-  <text x="84" y="34" font-family="Arial, Helvetica, sans-serif" font-size="21" font-weight="700" fill="#0F172A">Bademosi FlowTech</text>
-  <text x="84" y="52" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="600" letter-spacing="2.5" fill="#075985">PLUMBING SOLUTIONS</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 64" role="img" aria-label="Bademosi FlowTech Plumbing Solutions">
+  <defs>
+    <!-- Water Drop Gradient -->
+    <linearGradient id="dropGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8" />
+      <stop offset="100%" stop-color="#0284C7" />
+    </linearGradient>
+
+    <!-- Metallic Wrench Gradient -->
+    <linearGradient id="wrenchGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E2E8F0" />
+      <stop offset="100%" stop-color="#94A3B8" />
+    </linearGradient>
+  </defs>
+
+  <!-- Left Icon Group: Crossed Pipe Wrenches & Teardrop -->
+  <g transform="translate(32, 28) scale(0.55)">
+    <!-- Left Wrench (Rotated -36deg) -->
+    <g transform="rotate(-36)">
+      <rect x="-7" y="10" width="14" height="48" rx="4" fill="url(#wrenchGrad)" />
+      <path d="M-14,-14 H14 V14 H-14 Z" fill="url(#wrenchGrad)" />
+      <path d="M-14,-14 C-14,-30 -2,-34 12,-28 C20,-24 20,-14 12,-14 H-2 V-22 H10 C12,-22 10,-26 0,-26 C-8,-26 -8,-18 -8,-14 Z" fill="url(#wrenchGrad)" />
+      <rect x="-10" y="2" width="20" height="6" rx="2" fill="#64748B" />
+    </g>
+
+    <!-- Right Wrench (Rotated 36deg) -->
+    <g transform="rotate(36)">
+      <rect x="-7" y="10" width="14" height="48" rx="4" fill="url(#wrenchGrad)" />
+      <path d="M-14,-14 H14 V14 H-14 Z" fill="url(#wrenchGrad)" />
+      <path d="M-14,-14 C-14,-30 2,-34 -12,-28 C-20,-24 -20,-14 -12,-14 H2 V-22 H-10 C-12,-22 -10,-26 0,-26 C8,-26 8,-18 8,-14 Z" fill="url(#wrenchGrad)" />
+      <rect x="-10" y="2" width="20" height="6" rx="2" fill="#64748B" />
+    </g>
+
+    <!-- Central Water Drop -->
+    <path d="M0,-24 C14,-4 20,8 20,18 A20,20 0 1,1 -20,18 C-20,8 -14,-4 0,-24 Z" fill="url(#dropGrad)" />
+    <path d="M-6,4 C0,-2 6,-4 10,0 C12,8 8,14 4,20" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" opacity="0.6" />
+  </g>
+
+  <!-- Brand Text: BADEMOSI FLOWTECH -->
+  <text x="72" y="24" font-family="'Plus Jakarta Sans', 'Inter', 'Arial Black', sans-serif" font-size="20" font-weight="900" letter-spacing="1.5" fill="#FFFFFF">BADEMOSI</text>
+  <text x="72" y="45" font-family="'Plus Jakarta Sans', 'Inter', 'Arial Black', sans-serif" font-size="20" font-weight="900" letter-spacing="1.5" fill="#38BDF8">FLOWTECH</text>
+  <text x="72" y="58" font-family="'Plus Jakarta Sans', 'Inter', Arial, sans-serif" font-size="9" font-weight="700" letter-spacing="2.5" fill="#94A3B8">PLUMBING SOLUTIONS</text>
 </svg>

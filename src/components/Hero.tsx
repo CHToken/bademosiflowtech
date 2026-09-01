@@ -1,114 +1,197 @@
 import { PHONE, PHONE_DISPLAY, WA_LINK, TIKTOK_URL, INSTAGRAM_URL } from '../constants'
 import { CheckIcon, PhoneIcon, WhatsAppIcon, ShieldCheckIcon, CalendarIcon, TikTokIcon, InstagramIcon } from './Icons'
 import Reveal from './Reveal'
+import Counter from './Counter'
 
-const TRUST_POINTS = [
-  'Licensed, insured plumbing contractor',
-  '45-minute average emergency response in Lagos',
-  'Itemized quotes before work begins',
-  'Workmanship warranty on every job',
+const HERO_TRUST_BADGES = [
+  {
+    title: 'Licensed & Insured',
+    desc: '100% Workmanship Warranty',
+  },
+  {
+    title: '45-Min Emergency Response',
+    desc: '24/7 Rapid Dispatch Team',
+  },
+  {
+    title: 'Nationwide & International',
+    desc: 'All 36 States in Nigeria & Global Contracts',
+  },
 ]
 
 export default function Hero() {
   return (
-    <section className="hero" id="top">
-      <div className="container hero-grid">
-        <div className="hero-copy">
-          <p className="eyebrow">Plumbing contractor · Lagos · 24/7 emergency response</p>
+    <section className="hero bg-grain" id="top">
+      <div className="hero-mesh-overlay" aria-hidden="true" />
 
-          <h1>
-            Pipe burst? Blocked drain? <span className="accent">We fix it right the first time.</span>
+      {/* Morphing Water Shapes Layer */}
+      <div className="hero-water-shapes" aria-hidden="true">
+        <div className="water-shape water-shape-1" />
+        <div className="water-shape water-shape-2" />
+        <div className="water-shape water-shape-3" />
+      </div>
+
+      {/* Dynamic Water Drops Stream (14 Teardrop Water Drops Facing Upright) */}
+      <div className="hero-water-bubbles" aria-hidden="true">
+        <div className="water-bubble water-bubble-1" />
+        <div className="water-bubble water-bubble-2" />
+        <div className="water-bubble water-bubble-3" />
+        <div className="water-bubble water-bubble-4" />
+        <div className="water-bubble water-bubble-5" />
+        <div className="water-bubble water-bubble-6" />
+        <div className="water-bubble water-bubble-7" />
+        <div className="water-bubble water-bubble-8" />
+        <div className="water-bubble water-bubble-9" />
+        <div className="water-bubble water-bubble-10" />
+        <div className="water-bubble water-bubble-11" />
+        <div className="water-bubble water-bubble-12" />
+        <div className="water-bubble water-bubble-13" />
+        <div className="water-bubble water-bubble-14" />
+      </div>
+
+      <div className="container hero-grid-split">
+        {/* Left Side: Copy, Headline, CTA, Trust Badges */}
+        <div className="hero-left-copy">
+          <div className="hero-eyebrow-chip">
+            <span className="live-pulse-dot" aria-hidden="true" />
+            <span>LICENSED PLUMBING CONTRACTOR · NATIONWIDE &amp; INTERNATIONAL</span>
+          </div>
+
+          <h1 className="hero-oversized-title">
+            Pipe burst? Blocked drain?{' '}
+            <span className="accent-text-glow">We fix it right the first time.</span>
           </h1>
 
-          <p className="lede">
-            <strong>Bademosi FlowTech</strong> is a licensed plumbing contractor serving homes and businesses across
-            Lagos, Abuja, Ogun, Ibadan, Ondo and Asaba–Onitsha. We handle emergency repairs, household plumbing,
-            borehole and water system installations, and full plumbing works for buildings, condict and modern
-            developments, with clean workmanship and guaranteed results on every job.
+          <p className="hero-lead-text">
+            <strong>Bademosi FlowTech</strong> is a licensed plumbing contractor serving homes, commercial projects, and estate developments{' '}
+            <span className="highlight-area">nationwide across all 36 states in Nigeria</span> and on{' '}
+            <span className="highlight-area">international project contracts</span>. From 24/7 Lagos emergency callouts to borehole engineering, water treatment, and full civil plumbing works for multi-story buildings, we deliver guaranteed workmanship on every job.
           </p>
 
-          <div className="hero-ctas">
-            <a className="btn btn-emergency" href={`tel:${PHONE}`} aria-label={`Call Bademosi FlowTech on ${PHONE_DISPLAY}`}>
+          {/* Primary CTA Buttons - Bright Accent #FF6B00 for Primary Call Button */}
+          <div className="hero-cta-group">
+            <a
+              className="btn btn-primary-accent"
+              href={`tel:${PHONE}`}
+              aria-label={`Call Bademosi FlowTech directly on ${PHONE_DISPLAY}`}
+            >
               <PhoneIcon className="icon" />
-              Call now ({PHONE_DISPLAY})
+              <span>Call Now ({PHONE_DISPLAY})</span>
             </a>
-            <a className="btn btn-wa" href={WA_LINK} target="_blank" rel="noopener noreferrer">
+            <a
+              className="btn btn-wa-secondary"
+              href={WA_LINK}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <WhatsAppIcon className="icon" />
-              WhatsApp us
+              <span>WhatsApp Us</span>
             </a>
-            <a className="btn btn-ghost" href="#book">
+            <a className="btn btn-outline-ghost" href="#book">
               <CalendarIcon className="icon" />
-              Book a service
+              <span>Book Service</span>
             </a>
           </div>
 
-          <div className="hero-socials">
-            <span>Follow our work:</span>
-            <a href={TIKTOK_URL} target="_blank" rel="noopener noreferrer" aria-label="Bademosi FlowTech on TikTok">
-              <TikTokIcon className="icon-sm" />
-            </a>
-            <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" aria-label="Bademosi FlowTech on Instagram">
-              <InstagramIcon className="icon-sm" />
-            </a>
-          </div>
-
-          <ul className="trust-row">
-            {TRUST_POINTS.map((point) => (
-              <li key={point}>
-                <CheckIcon className="icon-sm text-sky" />
-                <span>{point}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <Reveal className="hero-art">
-          <div className="craftsman-hero-card">
-            <div className="craftsman-img-container">
-              <img
-                src="/gallery/master-craftsman.jpg"
-                alt="Bademosi FlowTech plumber inspecting a water manifold installation"
-                className="craftsman-img"
-                width="960"
-                height="640"
-              />
-              <div className="craftsman-gradient-overlay" />
-
-              <div className="craftsman-floating-badge top-badge">
-                <ShieldCheckIcon className="icon-sm text-sky" />
-                <div>
-                  <strong>Licensed &amp; insured</strong>
-                  <span>Workmanship warranty on every job</span>
+          {/* 2-3 Trust Badges Grid */}
+          <div className="hero-trust-badges">
+            {HERO_TRUST_BADGES.map((badge, i) => (
+              <div key={i} className="trust-badge-card">
+                <ShieldCheckIcon className="trust-badge-icon text-sky" />
+                <div className="trust-badge-text">
+                  <strong>{badge.title}</strong>
+                  <span>{badge.desc}</span>
                 </div>
               </div>
+            ))}
+          </div>
 
-              <div className="craftsman-floating-badge bottom-badge">
-                <span className="pulse" aria-hidden="true" />
-                <div>
-                  <strong>Average response: 45 minutes</strong>
-                  <span>Ikeja · Lekki · Ikoyi · Surulere · VI · Ajah</span>
-                </div>
+          {/* Social Proof Links */}
+          <div className="hero-social-strip">
+            <span className="social-label">Follow live project videos:</span>
+            <div className="social-links-row">
+              <a href={TIKTOK_URL} target="_blank" rel="noopener noreferrer" aria-label="Bademosi FlowTech on TikTok">
+                <TikTokIcon className="icon-sm" />
+                <span>TikTok</span>
+              </a>
+              <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" aria-label="Bademosi FlowTech on Instagram">
+                <InstagramIcon className="icon-sm" />
+                <span>Instagram</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Side: Full-bleed Real Photo with Ken Burns Zoom Effect */}
+        <Reveal className="hero-right-media">
+          <div className="hero-media-wrapper">
+            <div className="kenburns-container">
+              <img
+                src="/gallery/master-craftsman.jpg"
+                alt="Bademosi FlowTech plumbing contractor inspecting a precision manifold system"
+                className="kenburns-img"
+                width="1200"
+                height="900"
+              />
+            </div>
+            <div className="media-gradient-vignette" />
+
+            {/* Live Floating Glassmorphic Chips */}
+            <div className="glass-chip floating-top">
+              <span className="pulse-dot-green" aria-hidden="true" />
+              <div>
+                <strong>24/7 Emergency Dispatch</strong>
+                <span>Avg response: 45 mins in Lagos · Deployed Nationwide &amp; Globally</span>
               </div>
             </div>
 
-            <div className="craftsman-card-footer">
-              <div className="craftsman-stat">
-                <span className="stat-value">8+</span>
-                <span className="stat-label">Years in business</span>
-              </div>
-              <div className="stat-divider" />
-              <div className="craftsman-stat">
-                <span className="stat-value">2,400+</span>
-                <span className="stat-label">Jobs completed</span>
-              </div>
-              <div className="stat-divider" />
-              <div className="craftsman-stat">
-                <span className="stat-value">100%</span>
-                <span className="stat-label">Workmanship warranty</span>
+            <div className="glass-chip floating-bottom">
+              <div className="glass-stat-row">
+                <div className="glass-stat-item">
+                  <span className="glass-stat-num">
+                    <Counter end={10} suffix="+" />
+                  </span>
+                  <span className="glass-stat-lbl">Years Active</span>
+                </div>
+                <div className="glass-stat-divider" />
+                <div className="glass-stat-item">
+                  <span className="glass-stat-num">
+                    <Counter end={2400} suffix="+" />
+                  </span>
+                  <span className="glass-stat-lbl">Jobs Fixed</span>
+                </div>
+                <div className="glass-stat-divider" />
+                <div className="glass-stat-item">
+                  <span className="glass-stat-num">
+                    <Counter end={100} suffix="%" />
+                  </span>
+                  <span className="glass-stat-lbl">Warranty</span>
+                </div>
               </div>
             </div>
           </div>
         </Reveal>
+      </div>
+
+      {/* Trust points bar */}
+      <div className="container hero-proof-bar">
+        <div className="proof-pills-row">
+          <div className="proof-pill">
+            <CheckIcon className="icon-sm text-sky" />
+            <span>Licensed &amp; Insured Contractor</span>
+          </div>
+          <div className="proof-pill">
+            <CheckIcon className="icon-sm text-sky" />
+            <span>45-Minute Lagos Emergency Response</span>
+          </div>
+          <div className="proof-pill">
+            <CheckIcon className="icon-sm text-sky" />
+            <span>Itemized Upfront Estimates</span>
+          </div>
+          <div className="proof-pill">
+            <CheckIcon className="icon-sm text-sky" />
+            <span>Coverage: All 36 States in Nigeria &amp; International Project Contracts</span>
+          </div>
+        </div>
       </div>
     </section>
   )

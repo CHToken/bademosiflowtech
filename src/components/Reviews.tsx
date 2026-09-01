@@ -46,6 +46,7 @@ export default function Reviews() {
       title="Trusted by homeowners and businesses"
       lead="Every job is quoted upfront and backed by a workmanship warranty."
       center
+      className="reviews-soft-bg"
     >
       <div className="reviews-grid">
         {REVIEWS.map((review) => (

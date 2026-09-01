@@ -11,7 +11,6 @@ import {
   CheckIcon,
   WhatsAppIcon,
   PhoneIcon,
-  SparklesIcon,
   ShieldCheckIcon,
   VolumeIcon,
   VolumeMuteIcon,
@@ -182,7 +181,6 @@ export default function Gallery() {
   const [currentTimeSec, setCurrentTimeSec] = useState(0)
   const [durationSec, setDurationSec] = useState(0)
   const [isMuted, setIsMuted] = useState(false)
-  const [isBeforeAfterActive, setIsBeforeAfterActive] = useState(false)
 
   const videoElementRef = useRef<HTMLVideoElement | null>(null)
   const simulatedTimerRef = useRef<number | null>(null)
@@ -376,6 +374,7 @@ export default function Gallery() {
       title="Completed work across Lagos and beyond"
       lead="Real on-site jobs for homes and commercial properties. Tap any project for photos, videos and full technical details."
       center
+      className="gallery-dark-section bg-grain"
     >
       {/* Media Type & Category Filters */}
       <div className="gallery-controls">
@@ -522,69 +521,6 @@ export default function Gallery() {
           )
         })}
       </div>
-
-      {/* Interactive Before & After Craftsmanship Highlight */}
-      <Reveal className="before-after-box">
-        <div className="before-after-inner">
-          <div className="before-after-text">
-            <span className="badge-craftsman">
-              <SparklesIcon className="icon-sm" /> Workmanship warranty
-            </span>
-            <h3>Why homes and businesses choose Bademosi FlowTech</h3>
-            <p>
-              We replace corroded, leaking pipes with precision heat-fused PPR and pressure-tested copper
-              installations built to last decades, and every job is backed by a workmanship warranty.
-            </p>
-            <div className="before-after-controls">
-              <button
-                type="button"
-                className={`btn-ba ${!isBeforeAfterActive ? 'active' : ''}`}
-                onClick={() => setIsBeforeAfterActive(false)}
-              >
-                Typical problem (Before)
-              </button>
-              <button
-                type="button"
-                className={`btn-ba ${isBeforeAfterActive ? 'active' : ''}`}
-                onClick={() => setIsBeforeAfterActive(true)}
-              >
-                Bademosi standard (After)
-              </button>
-            </div>
-          </div>
-          <div className="before-after-visual">
-            {!isBeforeAfterActive ? (
-                <div className="ba-panel ba-before">
-                <div className="ba-tag tag-bad">Typical problem: leaking, rusted joint and low pressure</div>
-                <img
-                  src={getCloudinaryImageUrl('/gallery/leak-repair.jpg', { width: 800 })}
-                  alt="Pipe leak repair inspection"
-                  className="ba-img grayscale"
-                  width="800"
-                  height="500"
-                />
-                <div className="ba-caption">
-                  Hidden pinhole leak causing wall dampness and dropping whole-house water pressure.
-                </div>
-              </div>
-            ) : (
-                <div className="ba-panel ba-after">
-                <div className="ba-tag tag-good">Bademosi standard: precision heat-welded manifold</div>
-                <img
-                  src={getCloudinaryImageUrl('/gallery/master-craftsman.jpg', { width: 800 })}
-                  alt="Plumber calibrating a manifold"
-                  className="ba-img"
-                  width="800"
-                  height="500"
-                />
-                <div className="ba-caption">
-                  Zero-leak calibrated brass valves with dual pressure gauges tested at 6.0 Bar.
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      </Reveal>
 
       {/* Modal: Fullscreen Lightbox & Cloudinary Video Player */}
       {selectedItem && (

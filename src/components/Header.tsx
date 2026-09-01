@@ -10,9 +10,10 @@ export default function Header() {
         </a>
         <nav className="site-nav" aria-label="Primary">
           <a href="#services">Services</a>
+          <a href="#how">How it works</a>
           <a href="#gallery">Our work</a>
           <a href="#reviews">Reviews</a>
-          <a href="#areas">Coverage</a>
+          <a href="#faq">FAQ</a>
           <a href="#book">Get a quote</a>
         </nav>
         <div className="header-actions">

@@ -11,9 +11,9 @@ export default function Footer() {
               <img src="/logo.svg" alt="Bademosi FlowTech" width="200" height="45" />
             </a>
             <p className="footer-blurb">
-              Licensed plumbing contractor for homes and businesses. Emergency repairs, household plumbing, borehole
-              and water system installations, and building plumbing across Lagos, Abuja, Ogun, Ibadan, Ondo and
-              Asaba–Onitsha, with a workmanship warranty on every job.
+              Licensed plumbing contractor for homes, businesses, and estate developments. Emergency repairs, household plumbing, borehole
+              and water system installations, and building plumbing delivered nationwide across all 36 states in Nigeria and on
+              international project contracts, with a 100% workmanship warranty on every job.
             </p>
             <div className="footer-socials">
               <a
@@ -82,12 +82,23 @@ export default function Footer() {
                 </a>
               </li>
               <li>24/7 emergency response</li>
-              <li>Lagos · Abuja · Ogun · Ibadan · Ondo · Asaba–Onitsha</li>
+              <li>All 36 States in Nigeria &amp; International Projects</li>
             </ul>
           </div>
         </div>
         <div className="footer-bottom">
           <span>© 2026 Bademosi FlowTech — Plumbing Solutions. All rights reserved.</span>
+          <span className="developer-credit">
+            Built &amp; Developed by{' '}
+            <a
+              href="https://soledayo.vercel.app"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="dev-link"
+            >
+              TechyTro Software Development
+            </a>
+          </span>
           <span>Lagos, Nigeria</span>
         </div>
       </div>

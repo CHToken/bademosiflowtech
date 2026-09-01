@@ -114,6 +114,10 @@ export function getCloudinaryImageUrl(
 ): string {
   if (!urlOrPublicId) return ''
 
+  if (urlOrPublicId.startsWith('/') || urlOrPublicId.startsWith('./')) {
+    return urlOrPublicId
+  }
+
   if (urlOrPublicId.startsWith('http://') || urlOrPublicId.startsWith('https://')) {
     return optimizeCloudinaryUrl(urlOrPublicId, options)
   }
