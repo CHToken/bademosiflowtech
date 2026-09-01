@@ -12,7 +12,6 @@ import Faq from './components/Faq'
 import CtaBand from './components/CtaBand'
 import Booking from './components/Booking'
 import Footer from './components/Footer'
-import StickyCta from './components/StickyCta'
 import SplashScreen from './components/SplashScreen'
 
 export default function App() {
@@ -38,7 +37,6 @@ export default function App() {
         <Booking />
       </main>
       <Footer />
-      <StickyCta />
     </>
   )
 }

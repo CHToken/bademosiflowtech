@@ -703,12 +703,30 @@
   display: flex;
   align-items: center;
   text-decoration: none;
+  flex-shrink: 0;
+  min-width: 170px;
 }
 
 .brand img {
   height: 42px;
+  max-height: 44px;
   width: auto;
   display: block;
+  object-fit: contain;
+}
+
+@media (max-width: 639.98px) {
+  .brand {
+    min-width: 155px;
+  }
+
+  .brand img {
+    height: 38px;
+  }
+
+  .header-social {
+    display: none !important;
+  }
 }
 
 .site-nav {
@@ -734,6 +752,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  flex-shrink: 0;
 }
 
 .header-social {
@@ -1204,12 +1223,18 @@
 }
 
 .glass-chip.floating-top {
-  top: 16px;
-  left: 16px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  max-width: min(240px, 65%);
+  display: none !important;
+}
+
+@media (min-width: 1024px) {
+  .glass-chip.floating-top {
+    display: flex !important;
+    top: 16px;
+    left: 16px;
+    align-items: center;
+    gap: 10px;
+    max-width: min(240px, 65%);
+  }
 }
 
 .pulse-dot-green {
@@ -3318,25 +3343,7 @@
 
 /* Sticky Bottom Bar */
 .sticky-cta {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-top: 1px solid var(--line);
-  padding: 10px 16px;
-  z-index: 30;
-  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.08);
-}
-
-.sticky-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  max-width: 600px;
-  margin-inline: auto;
+  display: none !important;
 }
 
 .sticky-cta .btn {
