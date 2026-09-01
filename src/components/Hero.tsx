@@ -126,8 +126,8 @@ export default function Hero() {
           <div className="hero-media-wrapper">
             <div className="kenburns-container">
               <img
-                src="/gallery/master-craftsman.jpg"
-                alt="Bademosi FlowTech plumbing contractor inspecting a precision manifold system"
+                src="/hero-work.jpg"
+                alt="Bademosi FlowTech plumbing engineering team executing on-site plumbing work"
                 className="kenburns-img"
                 width="1200"
                 height="900"
