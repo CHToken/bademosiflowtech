@@ -1001,13 +1001,13 @@
 }
 
 .hero-oversized-title .accent-text-glow {
-  background: linear-gradient(135deg, #7DD3FC 0%, #38BDF8 35%, #FF8A8A 75%, #7DD3FC 100%);
-  background-size: 250% auto;
+  background: linear-gradient(135deg, #7DD3FC 0%, #38BDF8 50%, #0EA5E9 100%);
+  background-size: 200% auto;
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: textGradientGlow 6s ease-in-out infinite alternate;
-  filter: drop-shadow(0 0 25px rgba(125, 211, 252, 0.35));
+  filter: drop-shadow(0 0 20px rgba(125, 211, 252, 0.3));
   display: inline;
 }
 
@@ -3360,14 +3360,53 @@
     padding-inline: 16px;
   }
 
+  .hero-eyebrow-chip {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    padding: 6px 12px;
+    animation: none !important;
+  }
+
   .hero-oversized-title {
-    font-size: clamp(2.1rem, 7.5vw, 2.75rem);
-    line-height: 1.08;
+    font-size: clamp(2rem, 7vw, 2.35rem);
+    line-height: 1.14;
+    letter-spacing: -0.035em;
+    font-weight: 800;
+    margin-block: 14px 14px;
+    animation: none !important;
+  }
+
+  .hero-oversized-title .accent-text-glow {
+    background: linear-gradient(135deg, #7DD3FC 0%, #38BDF8 100%) !important;
+    background-clip: text !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    animation: none !important;
+    filter: none !important;
+    text-shadow: none !important;
+  }
+
+  .hero-lead-text {
+    font-size: 0.9375rem;
+    line-height: 1.55;
+    letter-spacing: -0.01em;
+    color: #94A3B8;
+    animation: none !important;
+  }
+
+  .btn-primary-accent::after {
+    animation: none !important;
+  }
+
+  .live-pulse-dot::after {
+    animation: none !important;
   }
 
   .hero-cta-group {
     flex-direction: column;
     width: 100%;
+    animation: none !important;
   }
 
   .hero-cta-group .btn {
@@ -3377,6 +3416,7 @@
 
   .hero-trust-badges {
     grid-template-columns: 1fr;
+    animation: none !important;
   }
 
   .glass-chip {
