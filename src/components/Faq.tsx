@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import Section from './Section'
 import Reveal from './Reveal'
-import { ArrowIcon, PhoneIcon, WhatsAppIcon, ShieldCheckIcon } from './Icons'
-import { PHONE, PHONE_DISPLAY, WA_LINK } from '../constants'
+import { ArrowIcon, ShieldCheckIcon } from './Icons'
 
 interface FaqItem {
   num: string
@@ -81,20 +80,10 @@ export default function Faq() {
             <div className="faq-sidebar-actions">
               <a
                 className="btn btn-primary-accent btn-block"
-                href={`tel:${PHONE}`}
-                aria-label={`Call Bademosi FlowTech directly on ${PHONE_DISPLAY}`}
+                href="#book"
               >
-                <PhoneIcon className="icon-sm" />
-                <span>Call {PHONE_DISPLAY}</span>
-              </a>
-              <a
-                className="btn btn-wa-secondary btn-block"
-                href={WA_LINK}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <WhatsAppIcon className="icon-sm" />
-                <span>WhatsApp Us</span>
+                <ShieldCheckIcon className="icon-sm" />
+                <span>Get Instant Assistance</span>
               </a>
             </div>
 

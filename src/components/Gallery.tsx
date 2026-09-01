@@ -10,13 +10,12 @@ import {
   ExpandIcon,
   CheckIcon,
   WhatsAppIcon,
-  PhoneIcon,
   ShieldCheckIcon,
   VolumeIcon,
   VolumeMuteIcon,
   CloudIcon,
 } from './Icons'
-import { PHONE, PHONE_DISPLAY, WHATSAPP_NUMBER } from '../constants'
+import { WHATSAPP_NUMBER } from '../constants'
 import {
   getCloudinaryImageUrl,
   getCloudinaryVideoUrl,
@@ -753,20 +752,16 @@ export default function Gallery() {
                   </div>
                 </div>
 
-                {/* Direct CTA Buttons */}
+                {/* Direct CTA Button */}
                 <div className="modal-actions">
                   <a
-                    className="btn btn-wa btn-block"
+                    className="btn btn-primary-accent btn-block"
                     href={getWhatsAppQuoteLink(selectedItem)}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
                     <WhatsAppIcon className="icon" />
-                    Request quote for a similar job
-                  </a>
-                  <a className="btn btn-emergency btn-block" href={`tel:${PHONE}`}>
-                    <PhoneIcon className="icon" />
-                    Call {PHONE_DISPLAY}
+                    Request Quote for Similar Project
                   </a>
                 </div>
               </div>

@@ -1,4 +1,3 @@
-import { PHONE, PHONE_DISPLAY } from '../constants'
 import Reveal from './Reveal'
 import { PhoneIcon, WrenchIcon, SearchIcon, DrainIcon } from './Icons'
 
@@ -17,9 +16,9 @@ export default function EmergencyBand() {
             <span className="pulse-dot-red" aria-hidden="true" />
             Emergency &amp; repair
           </h2>
-          <a className="btn btn-emergency btn-emergency-flat" href={`tel:${PHONE}`}>
+          <a className="btn btn-emergency btn-emergency-flat" href="#book">
             <PhoneIcon className="icon" />
-            Call {PHONE_DISPLAY}
+            24/7 Emergency Dispatch
           </a>
         </div>
         <div className="emergency-grid">
