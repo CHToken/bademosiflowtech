@@ -21,7 +21,7 @@ export interface CloudinaryTransformOptions {
 // Default fallback cloud name if public ID shorthand is used
 export const DEFAULT_CLOUDINARY_CLOUD_NAME =
   (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_CLOUDINARY_CLOUD_NAME) ||
-  'bademosiflowtech'
+  'dp83y4nnk'
 
 /**
  * Checks if a given string is a valid Cloudinary URL
