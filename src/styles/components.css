@@ -3352,7 +3352,63 @@
   font-size: 0.875rem;
 }
 
-/* ============ Comprehensive Responsive Layout System ============ */
+/* Mobile & Tablet Performance Optimization: Zero GPU Lag on Hero Section */
+@media (max-width: 1023.98px) {
+  /* Hide heavy blurred morphing blobs and 14 rising bubbles */
+  .hero-water-shapes,
+  .hero-water-bubbles {
+    display: none !important;
+  }
+
+  /* Disable backdrop-filter blur sampling for instant 60fps scrolling */
+  .hero-eyebrow-chip,
+  .glass-chip,
+  .trust-badge-card,
+  .hero-mesh-overlay {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  .hero-eyebrow-chip {
+    background: rgba(14, 165, 233, 0.12) !important;
+    border-color: rgba(56, 189, 248, 0.25) !important;
+  }
+
+  .trust-badge-card {
+    background: rgba(3, 37, 55, 0.75) !important;
+  }
+
+  .glass-chip {
+    background: rgba(3, 27, 42, 0.95) !important;
+  }
+
+  /* Disable Ken Burns infinite image zoom on mobile to prevent continuous layer repaints */
+  .kenburns-img {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  /* Disable 3D tilt perspective and filter blurs */
+  .hero-media-wrapper {
+    animation: none !important;
+    transform: none !important;
+    perspective: none !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+  }
+
+  .hero-media-wrapper:hover {
+    transform: none !important;
+  }
+
+  /* Turn off infinite keyframe animations on mobile elements */
+  .hero-oversized-title .accent-text-glow,
+  .btn-primary-accent::after,
+  .live-pulse-dot::after {
+    animation: none !important;
+    filter: none !important;
+    text-shadow: none !important;
+  }
+}
 
 /* Small Mobile Screens (< 480px) */
 @media (max-width: 479.98px) {
@@ -3773,15 +3829,13 @@
 
 @keyframes heroSwipeUpCurtain {
   0% {
-    transform: translateY(54px) scale(0.97);
-    opacity: 0.2;
-    filter: blur(8px);
+    transform: translateY(32px);
+    opacity: 0.3;
   }
 
   100% {
-    transform: translateY(0) scale(1);
+    transform: translateY(0);
     opacity: 1;
-    filter: blur(0);
   }
 }
 
