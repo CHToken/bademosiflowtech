@@ -68,6 +68,9 @@ export default function Footer() {
               <li>
                 <a href="#book">Request a quote</a>
               </li>
+              <li>
+                <a href="#gallery" className="admin-footer-link">Client Admin Portal (Upload)</a>
+              </li>
             </ul>
           </div>
           <div className="footer-col">

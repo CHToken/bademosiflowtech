@@ -288,4 +288,21 @@ export function InstagramIcon(props: IconProps) {
   )
 }
 
+export function TrashIcon(props: IconProps) {
+  return (
+    <svg {...svg(props)}>
+      <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+    </svg>
+  )
+}
+
+export function LockIcon(props: IconProps) {
+  return (
+    <svg {...svg(props)}>
+      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+      <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+    </svg>
+  )
+}
+
 

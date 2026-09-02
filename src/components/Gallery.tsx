@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import Section from './Section'
-import Reveal from './Reveal'
+import AdminUploadModal from './AdminUploadModal'
 import {
   CloseIcon,
   PlayIcon,
@@ -168,11 +168,28 @@ type CategoryFilter = (typeof CATEGORIES)[number]
 type MediaFilter = 'all' | 'photo' | 'video'
 
 export default function Gallery() {
+  const [customItems, setCustomItems] = useState<GalleryItem[]>(() => {
+    if (typeof window === 'undefined') return []
+    try {
+      const saved = localStorage.getItem('bademosi_custom_gallery')
+      return saved ? JSON.parse(saved) : []
+    } catch {
+      return []
+    }
+  })
+  const [isAdminModalOpen, setIsAdminModalOpen] = useState(false)
+
+  const allItems = [...customItems, ...GALLERY_ITEMS]
+
   const [activeCategory, setActiveCategory] = useState<CategoryFilter>('All')
   const [activeMedia, setActiveMedia] = useState<MediaFilter>('all')
-  const [hasFiltered, setHasFiltered] = useState(false)
   const [selectedItem, setSelectedItem] = useState<GalleryItem | null>(null)
   const [lastFocusedElement, setLastFocusedElement] = useState<HTMLElement | null>(null)
+
+  // Carousel State & Touch Gestures
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [isAutoplay, setIsAutoplay] = useState(true)
+  const [touchStartPos, setTouchStartPos] = useState<number | null>(null)
 
   // Real / simulated video playback state
   const [isPlayingVideo, setIsPlayingVideo] = useState(false)
@@ -186,11 +203,51 @@ export default function Gallery() {
   const modalCloseRef = useRef<HTMLButtonElement | null>(null)
   const modalRef = useRef<HTMLDivElement | null>(null)
 
-  const filteredItems = GALLERY_ITEMS.filter((item) => {
+  const filteredItems = allItems.filter((item) => {
     const matchesCat = activeCategory === 'All' || item.category === activeCategory
     const matchesMedia = activeMedia === 'all' || item.mediaType === activeMedia
     return matchesCat && matchesMedia
   })
+
+  // Reset carousel index when filters change
+  useEffect(() => {
+    setCurrentIndex(0)
+  }, [activeCategory, activeMedia])
+
+  // Carousel Autoplay Timer
+  useEffect(() => {
+    if (!isAutoplay || selectedItem || filteredItems.length <= 1) return
+    const timer = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % filteredItems.length)
+    }, 4500)
+    return () => clearInterval(timer)
+  }, [isAutoplay, selectedItem, filteredItems.length])
+
+  const handleNextSlide = () => {
+    if (filteredItems.length === 0) return
+    setCurrentIndex((prev) => (prev + 1) % filteredItems.length)
+  }
+
+  const handlePrevSlide = () => {
+    if (filteredItems.length === 0) return
+    setCurrentIndex((prev) => (prev - 1 + filteredItems.length) % filteredItems.length)
+  }
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStartPos(e.touches[0].clientX)
+  }
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartPos === null) return
+    const touchEndPos = e.changedTouches[0].clientX
+    const diff = touchStartPos - touchEndPos
+    if (diff > 40) {
+      handleNextSlide()
+    } else if (diff < -40) {
+      handlePrevSlide()
+    }
+    setTouchStartPos(null)
+  }
 
   // Keyboard navigation for modal: Escape closes, Tab stays inside
   useEffect(() => {
@@ -375,151 +432,221 @@ export default function Gallery() {
       center
       className="gallery-dark-section bg-grain"
     >
-      {/* Media Type & Category Filters */}
+      {/* Media Type & Category Filters + Client Upload Action */}
       <div className="gallery-controls">
         <div className="media-tabs" role="tablist" aria-label="Filter by media type">
           <button
             type="button"
             className={`media-tab ${activeMedia === 'all' ? 'active' : ''}`}
-            onClick={() => {
-              setActiveMedia('all')
-              setHasFiltered(true)
-            }}
+            onClick={() => setActiveMedia('all')}
           >
-            All Media ({GALLERY_ITEMS.length})
+            All Media ({allItems.length})
           </button>
           <button
             type="button"
             className={`media-tab ${activeMedia === 'photo' ? 'active' : ''}`}
-            onClick={() => {
-              setActiveMedia('photo')
-              setHasFiltered(true)
-            }}
+            onClick={() => setActiveMedia('photo')}
           >
             <ImageIcon className="icon-sm" />
-            Photos ({GALLERY_ITEMS.filter((i) => i.mediaType === 'photo').length})
+            Photos ({allItems.filter((i) => i.mediaType === 'photo').length})
           </button>
           <button
             type="button"
             className={`media-tab ${activeMedia === 'video' ? 'active' : ''}`}
-            onClick={() => {
-              setActiveMedia('video')
-              setHasFiltered(true)
-            }}
+            onClick={() => setActiveMedia('video')}
           >
             <VideoIcon className="icon-sm" />
-            Videos ({GALLERY_ITEMS.filter((i) => i.mediaType === 'video').length})
+            Videos ({allItems.filter((i) => i.mediaType === 'video').length})
           </button>
         </div>
 
-        <div className="category-pills" role="toolbar" aria-label="Filter by category">
-          {CATEGORIES.map((cat) => (
+        <div className="gallery-top-actions">
+          <button
+            type="button"
+            className="btn btn-outline-cyan btn-sm admin-portal-btn"
+            onClick={() => setIsAdminModalOpen(true)}
+          >
+            <CloudIcon className="icon-sm" /> Upload Photo/Video
+          </button>
+
+          {/* Carousel Arrows & Play/Pause */}
+          <div className="carousel-nav-buttons">
             <button
-              key={cat}
               type="button"
-              className={`cat-pill ${activeCategory === cat ? 'active' : ''}`}
-              onClick={() => {
-                setActiveCategory(cat)
-                setHasFiltered(true)
-              }}
+              className="carousel-btn"
+              onClick={handlePrevSlide}
+              aria-label="Previous project"
             >
-              {cat}
+              ‹
             </button>
-          ))}
+            <button
+              type="button"
+              className={`carousel-btn carousel-play-btn ${isAutoplay ? 'active' : ''}`}
+              onClick={() => setIsAutoplay(!isAutoplay)}
+              aria-label={isAutoplay ? 'Pause carousel autoplay' : 'Start carousel autoplay'}
+              title={isAutoplay ? 'Autoplay active (click to pause)' : 'Autoplay paused (click to play)'}
+            >
+              {isAutoplay ? <PauseIcon className="icon-xs" /> : <PlayIcon className="icon-xs" />}
+            </button>
+            <button
+              type="button"
+              className="carousel-btn"
+              onClick={handleNextSlide}
+              aria-label="Next project"
+            >
+              ›
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Gallery Grid */}
-      <div className={`gallery-grid${hasFiltered ? ' grid-animate' : ''}`} key={`${activeCategory}-${activeMedia}`}>
-        {filteredItems.map((item) => {
-          const displayImage = getCloudinaryImageUrl(item.image, {
-            width: 800,
-            quality: 'auto',
-            format: 'auto',
-          })
-          const isCloudinary = isCloudinaryUrl(item.image) || (item.videoUrl && isCloudinaryUrl(item.videoUrl))
-
-          return (
-            <Reveal key={item.id}>
-              <article className={`gallery-card ${item.mediaType === 'video' ? 'gallery-card-video' : ''}`}>
-                <button
-                  type="button"
-                  className="gallery-card-button"
-                  onClick={(e) => openModal(item, e.currentTarget)}
-                  aria-label={`View project: ${item.title}, ${item.location}`}
-                >
-                  <div className="gallery-media-wrapper">
-                    <img
-                      src={displayImage}
-                      alt=""
-                      loading="lazy"
-                      width="800"
-                      height="500"
-                      className="gallery-thumb"
-                    />
-                    <div className="gallery-overlay">
-                      <span className="gallery-action-badge">
-                        {item.mediaType === 'video' ? (
-                          <>
-                            <PlayIcon className="icon-sm" /> Watch video walkthrough
-                          </>
-                        ) : (
-                          <>
-                            <ExpandIcon className="icon-sm" /> View photo details
-                          </>
-                        )}
-                      </span>
-                    </div>
-
-                    {/* Top Badges */}
-                    <div className="gallery-top-tags">
-                      <span className={`media-badge ${item.mediaType}`}>
-                        {item.mediaType === 'video' ? (
-                          <>
-                            <VideoIcon className="icon-xs" /> Video {item.duration && `· ${item.duration}`}
-                          </>
-                        ) : (
-                          <>
-                            <ImageIcon className="icon-xs" /> Photo
-                          </>
-                        )}
-                      </span>
-                      <div className="tag-cluster">
-                        {isCloudinary && (
-                          <span className="cld-badge" title="HD quality">
-                            <CloudIcon className="icon-xs" /> HD
-                          </span>
-                        )}
-                        <span className="location-badge">{item.location}</span>
-                      </div>
-                    </div>
-
-                    {item.mediaType === 'video' && (
-                      <div className="video-card-play-btn" aria-hidden="true">
-                        <span className="play-pulse" />
-                        <PlayIcon className="icon-play" />
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="gallery-card-body">
-                    <span className="item-category">{item.category}</span>
-                    <h3 className="item-title">{item.title}</h3>
-                    <p className="item-desc">{item.description}</p>
-                    <div className="item-highlights">
-                      {item.highlights.slice(0, 2).map((hl) => (
-                        <span key={hl} className="highlight-tag">
-                          <CheckIcon className="icon-xs" /> {hl}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </button>
-              </article>
-            </Reveal>
-          )
-        })}
+      <div className="category-pills" role="toolbar" aria-label="Filter by category">
+        {CATEGORIES.map((cat) => (
+          <button
+            key={cat}
+            type="button"
+            className={`cat-pill ${activeCategory === cat ? 'active' : ''}`}
+            onClick={() => setActiveCategory(cat)}
+          >
+            {cat}
+          </button>
+        ))}
       </div>
+
+      {/* Gallery Touch Carousel */}
+      <div
+        className="gallery-carousel-viewport"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
+        <div
+          className="gallery-carousel-track"
+          style={{
+            transform: `translateX(-${currentIndex * 100}%)`,
+          }}
+        >
+          {filteredItems.map((item) => {
+            const displayImage = getCloudinaryImageUrl(item.image, {
+              width: 800,
+              quality: 'auto',
+              format: 'auto',
+            })
+            const isCloudinary = isCloudinaryUrl(item.image) || (item.videoUrl && isCloudinaryUrl(item.videoUrl))
+
+            return (
+              <div key={item.id} className="carousel-slide-item">
+                <article className={`gallery-card ${item.mediaType === 'video' ? 'gallery-card-video' : ''}`}>
+                  <button
+                    type="button"
+                    className="gallery-card-button"
+                    onClick={(e) => openModal(item, e.currentTarget)}
+                    aria-label={`View project: ${item.title}, ${item.location}`}
+                  >
+                    <div className="gallery-media-wrapper">
+                      <img
+                        src={displayImage}
+                        alt=""
+                        loading="lazy"
+                        width="800"
+                        height="500"
+                        className="gallery-thumb"
+                      />
+                      <div className="gallery-overlay">
+                        <span className="gallery-action-badge">
+                          {item.mediaType === 'video' ? (
+                            <>
+                              <PlayIcon className="icon-sm" /> Watch video walkthrough
+                            </>
+                          ) : (
+                            <>
+                              <ExpandIcon className="icon-sm" /> View photo details
+                            </>
+                          )}
+                        </span>
+                      </div>
+
+                      {/* Top Badges */}
+                      <div className="gallery-top-tags">
+                        <span className={`media-badge ${item.mediaType}`}>
+                          {item.mediaType === 'video' ? (
+                            <>
+                              <VideoIcon className="icon-xs" /> Video {item.duration && `· ${item.duration}`}
+                            </>
+                          ) : (
+                            <>
+                              <ImageIcon className="icon-xs" /> Photo
+                            </>
+                          )}
+                        </span>
+                        <div className="tag-cluster">
+                          {isCloudinary && (
+                            <span className="cld-badge" title="HD quality">
+                              <CloudIcon className="icon-xs" /> HD
+                            </span>
+                          )}
+                          <span className="location-badge">{item.location}</span>
+                        </div>
+                      </div>
+
+                      {item.mediaType === 'video' && (
+                        <div className="video-card-play-btn" aria-hidden="true">
+                          <span className="play-pulse" />
+                          <PlayIcon className="icon-play" />
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="gallery-card-body">
+                      <span className="item-category">{item.category}</span>
+                      <h3 className="item-title">{item.title}</h3>
+                      <p className="item-desc">{item.description}</p>
+                      <div className="item-highlights">
+                        {item.highlights.slice(0, 2).map((hl) => (
+                          <span key={hl} className="highlight-tag">
+                            <CheckIcon className="icon-xs" /> {hl}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </button>
+                </article>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* Carousel Pagination Indicator Dots */}
+      {filteredItems.length > 1 && (
+        <div className="carousel-pagination-dots" role="tablist" aria-label="Gallery slides">
+          {filteredItems.map((item, idx) => (
+            <button
+              key={item.id}
+              type="button"
+              className={`pagination-dot ${idx === currentIndex ? 'active' : ''}`}
+              onClick={() => setCurrentIndex(idx)}
+              aria-label={`Go to slide ${idx + 1}: ${item.title}`}
+            />
+          ))}
+        </div>
+      )}
+
+      {/* Client Admin Upload Modal */}
+      <AdminUploadModal
+        isOpen={isAdminModalOpen}
+        onClose={() => setIsAdminModalOpen(false)}
+        onAddItem={(item) => {
+          const updated = [item, ...customItems]
+          setCustomItems(updated)
+          localStorage.setItem('bademosi_custom_gallery', JSON.stringify(updated))
+        }}
+        customItems={customItems}
+        onDeleteItem={(id) => {
+          const updated = customItems.filter((i) => i.id !== id)
+          setCustomItems(updated)
+          localStorage.setItem('bademosi_custom_gallery', JSON.stringify(updated))
+        }}
+      />
 
       {/* Modal: Fullscreen Lightbox & Cloudinary Video Player */}
       {selectedItem && (
