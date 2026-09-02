@@ -3400,6 +3400,16 @@
     transform: none !important;
   }
 
+  /* Lightweight Plumbing Hydro Pattern for Mobile Hero Background */
+  .hero {
+    background-image:
+      url("/plumbing-hydro-pattern.svg"),
+      radial-gradient(800px 500px at 50% 20%, rgba(14, 165, 233, 0.08), transparent 75%),
+      linear-gradient(180deg, var(--brand-teal-950) 0%, var(--brand-teal-900) 100%) !important;
+    background-repeat: repeat, no-repeat, no-repeat;
+    background-size: 120px 120px, cover, cover;
+  }
+
   /* Turn off infinite keyframe animations on mobile elements */
   .hero-oversized-title .accent-text-glow,
   .btn-primary-accent::after,

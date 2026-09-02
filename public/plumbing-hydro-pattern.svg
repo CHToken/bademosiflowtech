@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120">
+  <!-- Hydro Conduit Pipe Lines -->
+  <path d="M0 30 H120 M30 0 V120 M0 90 H120 M90 0 V120" stroke="#38BDF8" stroke-width="1.2" stroke-dasharray="4 6" opacity="0.15" fill="none" />
+  
+  <!-- Pipe Elbow & Valve Nodes -->
+  <circle cx="30" cy="30" r="4" fill="none" stroke="#38BDF8" stroke-width="1.5" opacity="0.2" />
+  <circle cx="30" cy="30" r="1.5" fill="#38BDF8" opacity="0.25" />
+  
+  <circle cx="90" cy="90" r="4" fill="none" stroke="#38BDF8" stroke-width="1.5" opacity="0.2" />
+  <circle cx="90" cy="90" r="1.5" fill="#38BDF8" opacity="0.25" />
+
+  <!-- Central Water Droplet Geometry -->
+  <path d="M60 48 C66 58 70 64 70 70 A10 10 0 1 1 50 70 C50 64 54 58 60 48 Z" fill="#38BDF8" opacity="0.1" />
+
+  <!-- Subtle Crossed Pipe Wrench Outline -->
+  <g transform="translate(90, 30) scale(0.35)" opacity="0.12">
+    <path d="M-10 -10 L10 10 M10 -10 L-10 10" stroke="#94A3B8" stroke-width="3" stroke-linecap="round" />
+    <circle cx="0" cy="0" r="12" fill="none" stroke="#94A3B8" stroke-width="2" />
+  </g>
+</svg>
