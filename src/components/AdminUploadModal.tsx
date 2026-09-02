@@ -71,8 +71,8 @@ export default function AdminUploadModal({
     setErrorMessage('')
 
     try {
-      const cloudName = import.meta.env?.VITE_CLOUDINARY_CLOUD_NAME || ''
-      const uploadPreset = import.meta.env?.VITE_CLOUDINARY_UPLOAD_PRESET || ''
+      const cloudName = import.meta.env?.VITE_CLOUDINARY_CLOUD_NAME || 'dp83y4nnk'
+      const uploadPreset = import.meta.env?.VITE_CLOUDINARY_UPLOAD_PRESET || 'bademosiflowtech_preset'
 
       let mediaUrl = ''
 
@@ -81,7 +81,7 @@ export default function AdminUploadModal({
         const formData = new FormData()
         formData.append('file', selectedFile)
         formData.append('upload_preset', uploadPreset)
-        formData.append('folder', 'bademosiflowtech/gallery')
+        formData.append('folder', 'bademosiflowtech')
 
         const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`, {
           method: 'POST',
@@ -170,7 +170,7 @@ export default function AdminUploadModal({
               <div className="field">
                 <input
                   type="password"
-                  placeholder="Enter PIN (e.g. 2026)"
+                  placeholder="Enter PIN"
                   value={pinInput}
                   onChange={(e) => setPinInput(e.target.value)}
                   maxLength={6}
