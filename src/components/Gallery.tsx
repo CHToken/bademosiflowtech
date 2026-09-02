@@ -209,17 +209,25 @@ export default function Gallery() {
     return matchesCat && matchesMedia
   })
 
-  // Listen for #admin URL hash or ?admin=true search param
+  // Listen for /admin pathname route, #admin hash, or ?admin=true search param
   useEffect(() => {
     function checkAdminTrigger() {
       if (typeof window === 'undefined') return
-      if (window.location.hash === '#admin' || window.location.search.includes('admin=true')) {
+      const path = window.location.pathname.toLowerCase()
+      const hash = window.location.hash.toLowerCase()
+      const search = window.location.search.toLowerCase()
+
+      if (path.includes('/admin') || hash.includes('admin') || search.includes('admin=true')) {
         setIsAdminModalOpen(true)
       }
     }
     checkAdminTrigger()
+    window.addEventListener('popstate', checkAdminTrigger)
     window.addEventListener('hashchange', checkAdminTrigger)
-    return () => window.removeEventListener('hashchange', checkAdminTrigger)
+    return () => {
+      window.removeEventListener('popstate', checkAdminTrigger)
+      window.removeEventListener('hashchange', checkAdminTrigger)
+    }
   }, [])
 
   // Reset carousel index when filters change
