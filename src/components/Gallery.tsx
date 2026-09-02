@@ -8,13 +8,10 @@ import {
   VideoIcon,
   ImageIcon,
   ExpandIcon,
-  WhatsAppIcon,
-  ShieldCheckIcon,
   VolumeIcon,
   VolumeMuteIcon,
   CloudIcon,
 } from './Icons'
-import { WHATSAPP_NUMBER } from '../constants'
 import {
   getCloudinaryImageUrl,
   getCloudinaryVideoUrl,
@@ -437,18 +434,12 @@ export default function Gallery() {
     return `${mins}:${secs < 10 ? '0' : ''}${secs}`
   }
 
-  function getWhatsAppQuoteLink(item: GalleryItem) {
-    const text = `Hello Bademosi FlowTech! I saw your gallery project "${item.title}" in ${item.location} and would like a quote for a similar job at my property.`
-    return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`
-  }
-
   return (
     <Section
       id="gallery"
       titleId="gallery-title"
       eyebrow="Recent projects"
       title="Completed work across Lagos and beyond"
-      lead="Real on-site jobs for homes and commercial properties. Tap any project for photos, videos and full technical details."
       center
       className="gallery-dark-section bg-grain"
     >
@@ -566,13 +557,9 @@ export default function Gallery() {
                       <div className="gallery-overlay">
                         <span className="gallery-action-badge">
                           {item.mediaType === 'video' ? (
-                            <>
-                              <PlayIcon className="icon-sm" /> Watch video walkthrough
-                            </>
+                            <PlayIcon className="icon-sm" />
                           ) : (
-                            <>
-                              <ExpandIcon className="icon-sm" /> View photo details
-                            </>
+                            <ExpandIcon className="icon-sm" />
                           )}
                         </span>
                       </div>
@@ -813,84 +800,6 @@ export default function Gallery() {
                 </div>
               </div>
 
-              {/* Details & Action Column */}
-              <div className="modal-info-col">
-                <div className="modal-tags">
-                  <span className="pill-cat">{selectedItem.category}</span>
-                  <span className="pill-loc">{selectedItem.location}</span>
-                  {isCloudinaryUrl(selectedItem.image) && (
-                    <span className="pill-cld">
-                      <CloudIcon className="icon-xs" /> HD
-                    </span>
-                  )}
-                </div>
-
-                <h2 className="modal-title">{selectedItem.title}</h2>
-                <p className="modal-desc">{selectedItem.description}</p>
-
-                {/* Technical highlights */}
-                <div className="modal-section-title">Key project details</div>
-                <ul className="modal-highlights-list">
-                  {selectedItem.highlights.map((hl) => (
-                    <li key={hl}>
-                      <ShieldCheckIcon className="icon-sm text-sky" />
-                      <span>{hl}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                {/* Video Step-by-Step Walkthrough */}
-                {selectedItem.videoSteps && (
-                  <div className="video-steps-box">
-                    <div className="modal-section-title">Process steps</div>
-                    <div className="steps-timeline">
-                      {selectedItem.videoSteps.map((step, idx) => {
-                        const isStepActive = videoProgress >= (idx / selectedItem.videoSteps!.length) * 100
-                        return (
-                          <div key={step} className={`step-item ${isStepActive ? 'active' : ''}`}>
-                            <span className="step-num">{idx + 1}</span>
-                            <span className="step-text">{step}</span>
-                          </div>
-                        )
-                      })}
-                    </div>
-                  </div>
-                )}
-
-                {/* Spec Table if present */}
-                {selectedItem.specs && (
-                  <div className="specs-grid">
-                    {selectedItem.specs.map((spec) => (
-                      <div key={spec.label} className="spec-card">
-                        <span className="spec-label">{spec.label}</span>
-                        <strong className="spec-value">{spec.value}</strong>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {/* Warranty Callout */}
-                <div className="modal-owner-badge">
-                  <div className="owner-avatar">B</div>
-                  <div>
-                    <strong>Workmanship warranty</strong>
-                    <span>Every project is inspected and backed by Bademosi FlowTech.</span>
-                  </div>
-                </div>
-
-                {/* Direct CTA Button */}
-                <div className="modal-actions">
-                  <a
-                    className="btn btn-primary-accent btn-block"
-                    href={getWhatsAppQuoteLink(selectedItem)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <WhatsAppIcon className="icon" />
-                    Request Quote for Similar Project
-                  </a>
-                </div>
-              </div>
             </div>
           </div>
         </div>
