@@ -8,7 +8,6 @@ import {
   VideoIcon,
   ImageIcon,
   ExpandIcon,
-  CheckIcon,
   WhatsAppIcon,
   ShieldCheckIcon,
   VolumeIcon,
@@ -607,19 +606,6 @@ export default function Gallery() {
                           <PlayIcon className="icon-play" />
                         </div>
                       )}
-                    </div>
-
-                    <div className="gallery-card-body">
-                      <span className="item-category">{item.category}</span>
-                      <h3 className="item-title">{item.title}</h3>
-                      <p className="item-desc">{item.description}</p>
-                      <div className="item-highlights">
-                        {item.highlights.slice(0, 2).map((hl) => (
-                          <span key={hl} className="highlight-tag">
-                            <CheckIcon className="icon-xs" /> {hl}
-                          </span>
-                        ))}
-                      </div>
                     </div>
                   </button>
                 </article>
