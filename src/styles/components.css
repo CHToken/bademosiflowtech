@@ -1912,7 +1912,8 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 8px;
+  gap: 10px;
+  margin-block: 16px 32px;
 }
 
 .cat-pill {
@@ -4039,6 +4040,8 @@
   position: relative;
   touch-action: pan-y;
   border-radius: var(--r-lg);
+  padding-block: 8px 16px;
+  margin-top: 8px;
 }
 
 .gallery-carousel-track {
@@ -4050,7 +4053,7 @@
 .carousel-slide-item {
   flex: 0 0 100%;
   max-width: 100%;
-  padding-inline: 6px;
+  padding-inline: 10px;
   box-sizing: border-box;
 }
 

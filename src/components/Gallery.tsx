@@ -209,6 +209,19 @@ export default function Gallery() {
     return matchesCat && matchesMedia
   })
 
+  // Listen for #admin URL hash or ?admin=true search param
+  useEffect(() => {
+    function checkAdminTrigger() {
+      if (typeof window === 'undefined') return
+      if (window.location.hash === '#admin' || window.location.search.includes('admin=true')) {
+        setIsAdminModalOpen(true)
+      }
+    }
+    checkAdminTrigger()
+    window.addEventListener('hashchange', checkAdminTrigger)
+    return () => window.removeEventListener('hashchange', checkAdminTrigger)
+  }, [])
+
   // Reset carousel index when filters change
   useEffect(() => {
     setCurrentIndex(0)
@@ -461,14 +474,6 @@ export default function Gallery() {
         </div>
 
         <div className="gallery-top-actions">
-          <button
-            type="button"
-            className="btn btn-outline-cyan btn-sm admin-portal-btn"
-            onClick={() => setIsAdminModalOpen(true)}
-          >
-            <CloudIcon className="icon-sm" /> Upload Photo/Video
-          </button>
-
           {/* Carousel Arrows & Play/Pause */}
           <div className="carousel-nav-buttons">
             <button
