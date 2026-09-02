@@ -154,7 +154,7 @@ export default function AdminUploadModal({
   return (
     <div className="modal-backdrop active" onClick={onClose} role="dialog" aria-modal="true">
       <div className="modal-content admin-upload-modal" onClick={(e) => e.stopPropagation()}>
-        <button className="modal-close" onClick={onClose} aria-label="Close portal">
+        <button type="button" className="admin-modal-close-btn" onClick={onClose} aria-label="Close portal">
           <CloseIcon className="icon" />
         </button>
 
@@ -164,22 +164,23 @@ export default function AdminUploadModal({
               <LockIcon className="icon" />
             </div>
             <h2>Client Portal Authorization</h2>
-            <p>Enter your 4-digit project owner PIN to upload photos or videos to your gallery.</p>
+            <p>Enter your 4-digit project owner PIN to manage and upload gallery photos or videos.</p>
 
             <form onSubmit={handlePinSubmit} className="pin-form">
               <div className="field">
                 <input
                   type="password"
-                  placeholder="Enter PIN"
+                  placeholder="• • • •"
                   value={pinInput}
                   onChange={(e) => setPinInput(e.target.value)}
                   maxLength={6}
                   autoFocus
+                  className="pin-input-field"
                   required
                 />
               </div>
 
-              {pinError && <p className="form-error">Incorrect PIN. Please try again.</p>}
+              {pinError && <p className="form-error">Incorrect PIN. Please check and try again.</p>}
 
               <button type="submit" className="btn btn-primary-accent btn-block">
                 Unlock Upload Portal
@@ -275,10 +276,10 @@ export default function AdminUploadModal({
                   required
                 />
                 <label htmlFor="admin-media-file" className="file-drop-label">
-                  <CloudIcon className="icon-lg text-sky" />
-                  <div>
+                  <CloudIcon className="admin-cloud-icon" />
+                  <div className="file-drop-text">
                     <strong>{selectedFile ? selectedFile.name : 'Select Project Photo or Video File'}</strong>
-                    <span>Tap to browse files from your phone or laptop</span>
+                    <span>Tap to browse files from your device</span>
                   </div>
                 </label>
 
